@@ -1,0 +1,177 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{FAF9DF9A-8CCE-4712-A1FE-08DCDD4F7915}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ratchetPro</RootNamespace>
+    <AssemblyName>ratchetPro</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="dist\css\ratchet-theme-android.css" />
+    <Content Include="dist\css\ratchet-theme-android.min.css" />
+    <Content Include="dist\css\ratchet-theme-ios.css" />
+    <Content Include="dist\css\ratchet-theme-ios.min.css" />
+    <Content Include="dist\css\ratchet.css" />
+    <Content Include="dist\css\ratchet.min.css" />
+    <Content Include="dist\fonts\ratchicons.svg" />
+    <Content Include="dist\js\ratchet.js" />
+    <Content Include="dist\js\ratchet.min.js" />
+    <Content Include="docs\about.html" />
+    <Content Include="docs\assets\css\docs.css" />
+    <Content Include="docs\assets\css\docs.min.css" />
+    <Content Include="docs\assets\css\pygments-manni.css" />
+    <Content Include="docs\assets\img\apple-touch-icon-114x114.png" />
+    <Content Include="docs\assets\img\apple-touch-icon-57x57.png" />
+    <Content Include="docs\assets\img\apple-touch-icon-72x72.png" />
+    <Content Include="docs\assets\img\device-sprite.png" />
+    <Content Include="docs\assets\img\example-android.png" />
+    <Content Include="docs\assets\img\example-ios.png" />
+    <Content Include="docs\assets\img\example.png" />
+    <Content Include="docs\assets\img\slide-1.jpg" />
+    <Content Include="docs\assets\img\slide-2.jpg" />
+    <Content Include="docs\assets\img\slide-3.jpg" />
+    <Content Include="docs\assets\js\docs.js" />
+    <Content Include="docs\assets\js\docs.min.js" />
+    <Content Include="docs\assets\js\fingerblast.js" />
+    <Content Include="docs\components.html" />
+    <Content Include="docs\dist\css\ratchet-theme-android.css" />
+    <Content Include="docs\dist\css\ratchet-theme-android.min.css" />
+    <Content Include="docs\dist\css\ratchet-theme-ios.css" />
+    <Content Include="docs\dist\css\ratchet-theme-ios.min.css" />
+    <Content Include="docs\dist\css\ratchet.css" />
+    <Content Include="docs\dist\css\ratchet.min.css" />
+    <Content Include="docs\dist\fonts\ratchicons.svg" />
+    <Content Include="docs\dist\js\ratchet.js" />
+    <Content Include="docs\dist\js\ratchet.min.js" />
+    <Content Include="docs\examples.html" />
+    <Content Include="docs\examples\app-android-notes\css\app.css" />
+    <Content Include="docs\examples\app-android-notes\index.html" />
+    <Content Include="docs\examples\app-ios-mail\css\app.css" />
+    <Content Include="docs\examples\app-ios-mail\inbox.html" />
+    <Content Include="docs\examples\app-ios-mail\index.html" />
+    <Content Include="docs\examples\app-movies\choose-theater.html" />
+    <Content Include="docs\examples\app-movies\css\app.css" />
+    <Content Include="docs\examples\app-movies\img\argo.png" />
+    <Content Include="docs\examples\app-movies\img\ralph.png" />
+    <Content Include="docs\examples\app-movies\img\skyfall.png" />
+    <Content Include="docs\examples\app-movies\index.html" />
+    <Content Include="docs\favicon.ico" />
+    <Content Include="docs\getting-started.html" />
+    <Content Include="docs\index.html" />
+    <Content Include="docs\one.html" />
+    <Content Include="docs\robots.txt" />
+    <Content Include="docs\sitemap.xml" />
+    <Content Include="docs\template.html" />
+    <Content Include="docs\two.html" />
+    <Content Include="docs\_includes\ad.html" />
+    <Content Include="docs\_includes\browser-warning.html" />
+    <Content Include="docs\_includes\download-module.html" />
+    <Content Include="docs\_includes\footer.html" />
+    <Content Include="docs\_includes\header.html" />
+    <Content Include="docs\_includes\jump.html" />
+    <Content Include="docs\_includes\masthead.html" />
+    <Content Include="docs\_includes\toolbar.html" />
+    <Content Include="docs\_layouts\default.html" />
+    <Content Include="docs\_layouts\home.html" />
+    <Content Include="fonts\ratchicons.svg" />
+    <Content Include="Gruntfile.js" />
+    <Content Include="grunt\ratchicons-data-generator.js" />
+    <Content Include="js\common.js" />
+    <Content Include="js\modals.js" />
+    <Content Include="js\popovers.js" />
+    <Content Include="js\push.js" />
+    <Content Include="js\segmented-controllers.js" />
+    <Content Include="js\sliders.js" />
+    <Content Include="js\toggles.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include=".travis.yml" />
+    <None Include="bower.json" />
+    <None Include="CNAME" />
+    <None Include="CONTRIBUTING.md" />
+    <None Include="dist\fonts\ratchicons.eot" />
+    <None Include="dist\fonts\ratchicons.ttf" />
+    <None Include="dist\fonts\ratchicons.woff" />
+    <None Include="docs\dist\fonts\ratchicons.eot" />
+    <None Include="docs\dist\fonts\ratchicons.ttf" />
+    <None Include="docs\dist\fonts\ratchicons.woff" />
+    <None Include="docs\LICENSE" />
+    <None Include="docs\_data\ratchicons.yml" />
+    <None Include="fonts\ratchicons.eot" />
+    <None Include="fonts\ratchicons.ttf" />
+    <None Include="fonts\ratchicons.woff" />
+    <None Include="js\.jscsrc" />
+    <None Include="js\.jshintrc" />
+    <None Include="LICENSE" />
+    <None Include="package.json" />
+    <None Include="README.md" />
+    <None Include="sass\.csscomb.json" />
+    <None Include="sass\.csslintrc" />
+    <None Include="sass\badges.scss" />
+    <None Include="sass\bars.scss" />
+    <None Include="sass\base.scss" />
+    <None Include="sass\buttons.scss" />
+    <None Include="sass\cards.scss" />
+    <None Include="sass\docs.scss" />
+    <None Include="sass\forms.scss" />
+    <None Include="sass\mixins.scss" />
+    <None Include="sass\modals.scss" />
+    <None Include="sass\normalize.scss" />
+    <None Include="sass\popovers.scss" />
+    <None Include="sass\push.scss" />
+    <None Include="sass\ratchet.scss" />
+    <None Include="sass\ratchicons.scss" />
+    <None Include="sass\segmented-controls.scss" />
+    <None Include="sass\sliders.scss" />
+    <None Include="sass\table-views.scss" />
+    <None Include="sass\theme-android.scss" />
+    <None Include="sass\theme-ios.scss" />
+    <None Include="sass\toggles.scss" />
+    <None Include="sass\type.scss" />
+    <None Include="sass\variables.scss" />
+    <None Include="_config.yml" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
