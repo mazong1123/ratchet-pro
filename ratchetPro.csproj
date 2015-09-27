@@ -187,6 +187,7 @@
     <Content Include="grunt\ratchicons-data-generator.js" />
     <Content Include="js\common.js" />
     <Content Include="js\modals.js" />
+    <Content Include="js\pageloader.js" />
     <Content Include="js\popovers.js" />
     <Content Include="js\push.js" />
     <Content Include="js\segmented-controllers.js" />
