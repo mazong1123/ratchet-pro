@@ -34,18 +34,51 @@
         window.RATCHET = {};
     }
 
-    // Using JQuery.getScript(). Need help to replace getScript() with native script.
+    var loadedScripts = new Array();
+
+    // Using JQuery to load external scripts. Need help to get rid of JQuery.
     window.RATCHET.getScript = function (source, successCallback, failCallback) {
-        if (window.JQuery == undefined) {
+        if (typeof $ === 'undefined') {
+            console.log('JQuery not found. Cannot load and execute page scripts.');
+            return;
+        };
+
+        if (loadedScripts.indexOf(source) >= 0) {
+            // If the script has already been loaded, don't load it again, just call the success callback.
+            if (successCallback != undefined && typeof successCallback === 'function') {
+                successCallback(null, null, null);
+            }
+
             return;
         }
 
-        jQuery.ajax({
+        // Check if the script already been loaded to the page dom.
+        var scriptElements = document.getElementsByTagName('script');
+        for (var i = 0; i < scriptElements.length; i++) {
+            var scriptSource = scriptElements[i].getAttribute('src');
+            if (scriptSource === source) {
+                // The script has already been loaded to dom, don't load it again, store to the loadedScripts array and
+                // call the success callback.
+                loadedScripts.push(scriptSource);
+
+                if (successCallback != undefined && typeof successCallback === 'function') {
+                    successCallback(null, null, null);
+                }
+
+                return;
+            }
+        }
+
+        var getScriptOptions = {
             url: source,
-            dataType: "script",
-            cache: true
-        }).done(function (data, textStatus, jqXHR) {
-            if (successCallback != undefined && typeof successCallback === 'function'){
+            dataType: 'script'
+        };
+
+        $.ajax(getScriptOptions).done(function (data, textStatus, jqXHR) {
+            // Indicates the js has been loaded and executed.
+            loadedScripts.push(source);
+
+            if (successCallback != undefined && typeof successCallback === 'function') {
                 successCallback(data, textStatus, jqXHR);
             }
         }).fail(function (jqXHR, textStatus, errorThrown) {
@@ -1122,7 +1155,7 @@
 
         if (pageName != null && pageName.length > 0) {
             // Load page entry script.
-            var entryScriptPath = pageLoaderSettings.pageEntryScriptPath + '/' + pageEntryScriptPrefix + pageName + '.js';
+            var entryScriptPath = pageLoaderSettings.pageEntryScriptPath + '/' + pageLoaderSettings.pageEntryScriptPrefix + pageName + '.js';
             window.RATCHET.getScript(entryScriptPath, function () {
                 // Fire page content ready event.
                 var eventName = pageName + pageLoaderSettings.pageContentReadyEventSuffix;
@@ -1134,7 +1167,7 @@
 
                 document.dispatchEvent(pageContentReadyEvent);
             }, function (jqXHR, textStatus, errorThrown) {
-                console.log(statusText);
+                console.log(textStatus);
                 console.log(errorThrown);
             });
         }

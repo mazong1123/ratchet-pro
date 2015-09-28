@@ -17,7 +17,7 @@
 
         if (pageName != null && pageName.length > 0) {
             // Load page entry script.
-            var entryScriptPath = pageLoaderSettings.pageEntryScriptPath + '/' + pageEntryScriptPrefix + pageName + '.js';
+            var entryScriptPath = pageLoaderSettings.pageEntryScriptPath + '/' + pageLoaderSettings.pageEntryScriptPrefix + pageName + '.js';
             window.RATCHET.getScript(entryScriptPath, function () {
                 // Fire page content ready event.
                 var eventName = pageName + pageLoaderSettings.pageContentReadyEventSuffix;
@@ -29,7 +29,7 @@
 
                 document.dispatchEvent(pageContentReadyEvent);
             }, function (jqXHR, textStatus, errorThrown) {
-                console.log(statusText);
+                console.log(textStatus);
                 console.log(errorThrown);
             });
         }

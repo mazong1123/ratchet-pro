@@ -164,6 +164,9 @@
     <Content Include="docs\examples\app-movies\img\ralph.png" />
     <Content Include="docs\examples\app-movies\img\skyfall.png" />
     <Content Include="docs\examples\app-movies\index.html" />
+    <Content Include="docs\examples\app-movies\js\app-choose-theater.js" />
+    <Content Include="docs\examples\app-movies\js\app-index.js" />
+    <Content Include="docs\examples\app-movies\js\jquery.js" />
     <Content Include="docs\favicon.ico" />
     <Content Include="docs\getting-started.html" />
     <Content Include="docs\index.html" />
