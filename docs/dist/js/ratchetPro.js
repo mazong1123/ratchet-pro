@@ -1,68 +1,100 @@
 /*!
  * =====================================================
- * Ratchet v2.0.2 (http://goratchet.com)
- * Copyright 2015 Connor Sears
- * Licensed under MIT (https://github.com/twbs/ratchet/blob/master/LICENSE)
+ * RatchetPro v1.0.0 (https://github.com/mazong1123/ratchet-pro)
+ * Copyright 2015 mazong1123
+ * Licensed under MIT (https://github.com/mazong1123/ratchet-pro/blob/master/LICENSE)
  *
- * v2.0.2 designed by @connors.
+ * v1.0.0 designed by @mazong1123.
+ * forked from https://github.com/twbs/ratchet 
  * =====================================================
  */
-/* ========================================================================
- * Ratchet: common.js v2.0.2
- * http://goratchet.com/
- * ========================================================================
- * Copyright 2015 Connor Sears
- * Licensed under MIT (https://github.com/twbs/ratchet/blob/master/LICENSE)
- * ======================================================================== */
+/* ===================================================================================
+ * RatchetPro: common.js v1.0.0
+ * https://github.com/mazong1123/ratchet-pro
+ * ===================================================================================
+ * Copyright 2015 Jim Ma
+ * Licensed under MIT (https://github.com/mazong1123/ratchet-pro/blob/master/LICENSE)
+ * Originally from https://github.com/twbs/ratchet
+ * =================================================================================== */
 
 !(function () {
-  'use strict';
+    'use strict';
 
-  // Compatible With CustomEvent
-  if (!window.CustomEvent) {
-    window.CustomEvent = function (type, config) {
-      var e = document.createEvent('CustomEvent');
-      e.initCustomEvent(type, config.bubbles, config.cancelable, config.detail);
-      return e;
-    };
-  }
-
-  // Create Ratchet namespace
-  if (typeof window.RATCHET === 'undefined') {
-    window.RATCHET = {};
-  }
-
-  // Original script from http://davidwalsh.name/vendor-prefix
-  window.RATCHET.getBrowserCapabilities = (function () {
-    var styles = window.getComputedStyle(document.documentElement, '');
-    var pre = (Array.prototype.slice
-        .call(styles)
-        .join('')
-        .match(/-(moz|webkit|ms)-/) || (styles.OLink === '' && ['', 'o'])
-      )[1];
-    return {
-      prefix: '-' + pre + '-',
-      transform: pre[0].toUpperCase() + pre.substr(1) + 'Transform'
-    };
-  })();
-
-  window.RATCHET.getTransitionEnd = (function () {
-    var el = document.createElement('ratchet');
-    var transEndEventNames = {
-      WebkitTransition : 'webkitTransitionEnd',
-      MozTransition : 'transitionend',
-      OTransition : 'oTransitionEnd otransitionend',
-      transition : 'transitionend'
-    };
-
-    for (var name in transEndEventNames) {
-      if (el.style[name] !== undefined) {
-        return transEndEventNames[name];
-      }
+    // Compatible With CustomEvent
+    if (!window.CustomEvent) {
+        window.CustomEvent = function (type, config) {
+            var e = document.createEvent('CustomEvent');
+            e.initCustomEvent(type, config.bubbles, config.cancelable, config.detail);
+            return e;
+        };
     }
 
-    return transEndEventNames.transition;
-  })();
+    // Create Ratchet namespace
+    if (typeof window.RATCHET === 'undefined') {
+        window.RATCHET = {};
+    }
+
+    // Using JQuery.getScript(). Need help to replace getScript() with native script.
+    window.RATCHET.getScript = function (source, successCallback, failCallback) {
+        if (window.JQuery == undefined) {
+            return;
+        }
+
+        jQuery.ajax({
+            url: source,
+            dataType: "script",
+            cache: true
+        }).done(function (data, textStatus, jqXHR) {
+            if (successCallback != undefined && typeof successCallback === 'function'){
+                successCallback(data, textStatus, jqXHR);
+            }
+        }).fail(function (jqXHR, textStatus, errorThrown) {
+            if (failCallback != undefined && typeof failCallback === 'function') {
+                failCallback(jqXHR, textStatus, errorThrown);
+            }
+        });
+    };
+
+    // Original script from http://davidwalsh.name/vendor-prefix
+    window.RATCHET.getBrowserCapabilities = (function () {
+        var styles = window.getComputedStyle(document.documentElement, '');
+        var pre = (Array.prototype.slice
+            .call(styles)
+            .join('')
+            .match(/-(moz|webkit|ms)-/) || (styles.OLink === '' && ['', 'o'])
+          )[1];
+        return {
+            prefix: '-' + pre + '-',
+            transform: pre[0].toUpperCase() + pre.substr(1) + 'Transform'
+        };
+    })();
+
+    window.RATCHET.getTransitionEnd = (function () {
+        var el = document.createElement('ratchet');
+        var transEndEventNames = {
+            WebkitTransition: 'webkitTransitionEnd',
+            MozTransition: 'transitionend',
+            OTransition: 'oTransitionEnd otransitionend',
+            transition: 'transitionend'
+        };
+
+        for (var name in transEndEventNames) {
+            if (el.style[name] !== undefined) {
+                return transEndEventNames[name];
+            }
+        }
+
+        return transEndEventNames.transition;
+    })();
+
+    // Default page loader settings. Used by pageloader.js.
+    window.RATCHET.pageLoaderSettings = {
+        pageContentElementSelector: '.content',
+        pageNameElementAttributeName: 'data-page',
+        pageEntryScriptPath: 'scripts',
+        pageEntryScriptPrefix: 'app-',
+        pageContentReadyEventSuffix: 'ContentReady'
+    };
 }());
 
 /* ========================================================================
@@ -1069,4 +1101,57 @@
     toggle    = false;
   });
 
+}());
+
+/* ===================================================================================
+ * RatchetPro: pageLoader.js v1.0.0
+ * https://github.com/mazong1123/ratchet-pro
+ * ===================================================================================
+ * Copyright 2015 Jim Ma
+ * Licensed under MIT (https://github.com/mazong1123/ratchet-pro/blob/master/LICENSE)
+ * =================================================================================== */
+
+!(function () {
+    'use strict';
+
+    var checkPage = function () {
+        var pageLoaderSettings = window.RATCHET.pageLoaderSettings;
+
+        var pageContentElement = document.querySelector(pageLoaderSettings.pageContentElementSelector);
+        var pageName = pageContentElement.getAttribute(pageLoaderSettings.pageNameElementAttributeName);
+
+        if (pageName != null && pageName.length > 0) {
+            // Load page entry script.
+            var entryScriptPath = pageLoaderSettings.pageEntryScriptPath + '/' + pageEntryScriptPrefix + pageName + '.js';
+            window.RATCHET.getScript(entryScriptPath, function () {
+                // Fire page content ready event.
+                var eventName = pageName + pageLoaderSettings.pageContentReadyEventSuffix;
+                var pageContentReadyEvent = new CustomEvent(eventName, {
+                    detail: {},
+                    bubbles: true,
+                    cancelable: true
+                });
+
+                document.dispatchEvent(pageContentReadyEvent);
+            }, function (jqXHR, textStatus, errorThrown) {
+                console.log(statusText);
+                console.log(errorThrown);
+            });
+        }
+    };
+
+    // Inject checkPage() after push event fired.
+    window.addEventListener('push', checkPage);
+
+    window.RATCHET.changePage = function (url, transition) {
+        var options = {
+            url: url
+        };
+
+        if (transition != undefined) {
+            options.transition = transition;
+        }
+
+        PUSH(options);
+    };
 }());

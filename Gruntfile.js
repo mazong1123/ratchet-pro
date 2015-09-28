@@ -34,11 +34,12 @@ module.exports = function (grunt) {
 
     banner: '/*!\n' +
             ' * =====================================================\n' +
-            ' * Ratchet v<%= pkg.version %> (<%= pkg.homepage %>)\n' +
+            ' * RatchetPro v<%= pkg.version %> (<%= pkg.homepage %>)\n' +
             ' * Copyright <%= grunt.template.today("yyyy") %> <%= pkg.author %>\n' +
-            ' * Licensed under <%= pkg.license %> (https://github.com/twbs/ratchet/blob/master/LICENSE)\n' +
+            ' * Licensed under <%= pkg.license %> (https://github.com/mazong1123/ratchet-pro/blob/master/LICENSE)\n' +
             ' *\n' +
-            ' * v<%= pkg.version %> designed by @connors.\n' +
+            ' * v<%= pkg.version %> designed by @mazong1123.\n' +
+            ' * forked from https://github.com/twbs/ratchet \n' +
             ' * =====================================================\n' +
             ' */\n',
 
@@ -58,7 +59,8 @@ module.exports = function (grunt) {
           'js/push.js',
           'js/segmented-controllers.js',
           'js/sliders.js',
-          'js/toggles.js'
+          'js/toggles.js',
+          'js/pageLoader.js'
         ],
         dest: '<%= meta.distPath %>js/<%= pkg.name %>.js'
       }

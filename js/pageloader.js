@@ -1,5 +1,5 @@
 ﻿/* ===================================================================================
- * RatchetPro: pageloader.js v1.0.0
+ * RatchetPro: pageLoader.js v1.0.0
  * https://github.com/mazong1123/ratchet-pro
  * ===================================================================================
  * Copyright 2015 Jim Ma
@@ -12,24 +12,41 @@
     var checkPage = function () {
         var pageLoaderSettings = window.RATCHET.pageLoaderSettings;
 
-        var pageContentElement = $(pageLoaderSettings.pageContentElementSelector);
-        var pageName = pageContentElement.attr(pageLoaderSettings.pageNameElementAttributeName);
+        var pageContentElement = document.querySelector(pageLoaderSettings.pageContentElementSelector);
+        var pageName = pageContentElement.getAttribute(pageLoaderSettings.pageNameElementAttributeName);
 
-        if (pageName) {
+        if (pageName != null && pageName.length > 0) {
             // Load page entry script.
             var entryScriptPath = pageLoaderSettings.pageEntryScriptPath + '/' + pageEntryScriptPrefix + pageName + '.js';
-            $.getScript(entryScriptPath)
-            .done(function (script, textStatus) {
+            window.RATCHET.getScript(entryScriptPath, function () {
                 // Fire page content ready event.
-                $(document).trigger(pageName + pageLoaderSettings.pageContentReadyEventSuffix);
-            })
-            .fail(function (jqxhr, statusText, errorThrown) {
+                var eventName = pageName + pageLoaderSettings.pageContentReadyEventSuffix;
+                var pageContentReadyEvent = new CustomEvent(eventName, {
+                    detail: {},
+                    bubbles: true,
+                    cancelable: true
+                });
+
+                document.dispatchEvent(pageContentReadyEvent);
+            }, function (jqXHR, textStatus, errorThrown) {
                 console.log(statusText);
-                console.log(jqxhr);
+                console.log(errorThrown);
             });
         }
     };
 
     // Inject checkPage() after push event fired.
     window.addEventListener('push', checkPage);
+
+    window.RATCHET.changePage = function (url, transition) {
+        var options = {
+            url: url
+        };
+
+        if (transition != undefined) {
+            options.transition = transition;
+        }
+
+        PUSH(options);
+    };
 }());

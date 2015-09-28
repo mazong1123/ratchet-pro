@@ -1,7 +1,7 @@
 {
-  "name": "ratchet",
-  "description": "Build mobile apps with simple HTML, CSS, and JS components.",
-  "version": "2.0.2",
+  "name": "ratchetPro",
+  "description": "A lightweight framework to build mobile apps with simple HTML, CSS, and JS components.",
+  "version": "1.0.0",
   "keywords": [
     "css",
     "fonts",
@@ -10,16 +10,16 @@
     "mobile",
     "prototype"
   ],
-  "homepage": "http://goratchet.com",
-  "author": "Connor Sears",
+  "homepage": "https://github.com/mazong1123/ratchet-pro",
+  "author": "mazong1123",
   "style": "dist/css/ratchet.css",
   "sass": "sass/ratchet.scss",
   "repository": {
     "type": "git",
-    "url": "https://github.com/twbs/ratchet.git"
+    "url": "https://github.com/mazong1123/ratchet-pro.git"
   },
   "bugs": {
-    "url": "https://github.com/twbs/ratchet/issues"
+    "url": "https://github.com/mazong1123/ratchet-pro/issues"
   },
   "license": "MIT",
   "scripts": {

@@ -24,6 +24,27 @@
         window.RATCHET = {};
     }
 
+    // Using JQuery.getScript(). Need help to replace getScript() with native script.
+    window.RATCHET.getScript = function (source, successCallback, failCallback) {
+        if (window.JQuery == undefined) {
+            return;
+        }
+
+        jQuery.ajax({
+            url: source,
+            dataType: "script",
+            cache: true
+        }).done(function (data, textStatus, jqXHR) {
+            if (successCallback != undefined && typeof successCallback === 'function'){
+                successCallback(data, textStatus, jqXHR);
+            }
+        }).fail(function (jqXHR, textStatus, errorThrown) {
+            if (failCallback != undefined && typeof failCallback === 'function') {
+                failCallback(jqXHR, textStatus, errorThrown);
+            }
+        });
+    };
+
     // Original script from http://davidwalsh.name/vendor-prefix
     window.RATCHET.getBrowserCapabilities = (function () {
         var styles = window.getComputedStyle(document.documentElement, '');

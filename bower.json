@@ -13,8 +13,8 @@
   "homepage": "http://goratchet.com",
   "main": [
     "sass/ratchet.scss",
-    "dist/css/ratchet.css",
-    "dist/js/ratchet.js",
+    "dist/css/ratchetPro.css",
+    "dist/js/ratchetPro.js",
     "dist/fonts/ratchicons.eot",
     "dist/fonts/ratchicons.svg",
     "dist/fonts/ratchicons.ttf",
