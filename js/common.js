@@ -24,6 +24,13 @@
         window.RATCHET = {};
     }
 
+    // Enable mouse support. Mouse support is disabled by default.
+    window.RATCHET.enableMouseSupport = function () {
+        if (typeof window.FingerBlast != 'undefined') {
+            new FingerBlast('body');
+        }
+    };
+
     var loadedScripts = new Array();
 
     // Using JQuery to load external scripts. Need help to get rid of JQuery.
