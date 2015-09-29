@@ -22,6 +22,8 @@
     var maxCacheLength = 20;
     var cacheMapping = sessionStorage;
     var domCache = {};
+    var htmlCache = new Array();
+
     // Change these to unquoted camelcase in the next major version bump
     var transitionMap = {
         'slide-in': 'slide-out',
@@ -209,7 +211,6 @@
 
     var PUSH = function (options) {
         var key;
-        var xhr = PUSH.xhr;
 
         options.container = options.container || options.transition ? document.querySelector('.content') : document.body;
 
@@ -221,6 +222,28 @@
             }
         }
 
+        if (!PUSH.id) {
+            cacheReplace({
+                id: +new Date(),
+                url: window.location.href,
+                title: document.title,
+                timeout: options.timeout,
+                transition: options.transition
+            });
+        }
+
+        cacheCurrentContent();
+
+        // Load from cache at first.
+        var cachedHtml = htmlCache[options.url];
+        if (cachedHtml !== undefined) {
+            renderData(cachedHtml, options);
+            cachePush();
+
+            return;
+        }
+
+        var xhr = PUSH.xhr;
         if (xhr && xhr.readyState < 4) {
             xhr.onreadystatechange = noop;
             xhr.abort();
@@ -247,18 +270,6 @@
             };
         }
 
-        if (!PUSH.id) {
-            cacheReplace({
-                id: +new Date(),
-                url: window.location.href,
-                title: document.title,
-                timeout: options.timeout,
-                transition: options.transition
-            });
-        }
-
-        cacheCurrentContent();
-
         if (options.timeout) {
             options._timeout = setTimeout(function () { xhr.abort('timeout'); }, options.timeout);
         }
@@ -282,14 +293,27 @@
         domCache[PUSH.id] = document.body.cloneNode(true);
     }
 
-
     // Main XHR handlers
     // =================
 
     var success = function (xhr, options) {
+        var data = parseXHR(xhr, options);
+        renderData(data, options);
+
+        // Cache the loaded html data.
+        htmlCache[options.url] = data;
+    };
+
+    var failure = function (url) {
+        throw new Error('Could not get: ' + url);
+    };
+
+
+    // PUSH helpers
+    // ============
+    var renderData = function (data, options) {
         var key;
         var barElement;
-        var data = parseXHR(xhr, options);
 
         if (!data.contents) {
             return locationReplace(options.url);
@@ -330,14 +354,6 @@
             return;
         }
     };
-
-    var failure = function (url) {
-        throw new Error('Could not get: ' + url);
-    };
-
-
-    // PUSH helpers
-    // ============
 
     var swapContent = function (swap, container, transition, complete) {
         var enter;
