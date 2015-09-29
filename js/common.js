@@ -15,6 +15,7 @@
         window.CustomEvent = function (type, config) {
             var e = document.createEvent('CustomEvent');
             e.initCustomEvent(type, config.bubbles, config.cancelable, config.detail);
+
             return e;
         };
     }
@@ -37,6 +38,7 @@
     window.RATCHET.getScript = function (source, successCallback, failCallback) {
         if (typeof $ === 'undefined') {
             console.log('JQuery not found. Cannot load and execute page scripts.');
+
             return;
         };
 

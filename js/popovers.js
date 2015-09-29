@@ -7,80 +7,80 @@
  * ======================================================================== */
 
 !(function () {
-  'use strict';
+    'use strict';
 
-  var popover;
+    var popover;
 
-  var findPopovers = function (target) {
-    var i;
-    var popovers = document.querySelectorAll('a');
+    var findPopovers = function (target) {
+        var i;
+        var popovers = document.querySelectorAll('a');
 
-    for (; target && target !== document; target = target.parentNode) {
-      for (i = popovers.length; i--;) {
-        if (popovers[i] === target) {
-          return target;
+        for (; target && target !== document; target = target.parentNode) {
+            for (i = popovers.length; i--;) {
+                if (popovers[i] === target) {
+                    return target;
+                }
+            }
         }
-      }
-    }
-  };
+    };
 
-  var onPopoverHidden = function () {
-    popover.style.display = 'none';
-    popover.removeEventListener(window.RATCHET.getTransitionEnd, onPopoverHidden);
-  };
+    var onPopoverHidden = function () {
+        popover.style.display = 'none';
+        popover.removeEventListener(window.RATCHET.getTransitionEnd, onPopoverHidden);
+    };
 
-  var backdrop = (function () {
-    var element = document.createElement('div');
+    var backdrop = (function () {
+        var element = document.createElement('div');
 
-    element.classList.add('backdrop');
+        element.classList.add('backdrop');
 
-    element.addEventListener('touchend', function () {
-      popover.addEventListener(window.RATCHET.getTransitionEnd, onPopoverHidden);
-      popover.classList.remove('visible');
-      popover.parentNode.removeChild(backdrop);
-    });
+        element.addEventListener('touchend', function () {
+            popover.addEventListener(window.RATCHET.getTransitionEnd, onPopoverHidden);
+            popover.classList.remove('visible');
+            popover.parentNode.removeChild(backdrop);
+        });
 
-    return element;
-  }());
+        return element;
+    }());
 
-  var getPopover = function (e) {
-    var anchor = findPopovers(e.target);
+    var getPopover = function (e) {
+        var anchor = findPopovers(e.target);
 
-    if (!anchor || !anchor.hash || (anchor.hash.indexOf('/') > 0)) {
-      return;
-    }
+        if (!anchor || !anchor.hash || (anchor.hash.indexOf('/') > 0)) {
+            return;
+        }
 
-    try {
-      popover = document.querySelector(anchor.hash);
-    } catch (error) {
-      popover = null;
-    }
+        try {
+            popover = document.querySelector(anchor.hash);
+        } catch (error) {
+            popover = null;
+        }
 
-    if (popover === null) {
-      return;
-    }
+        if (popover === null) {
+            return;
+        }
 
-    if (!popover || !popover.classList.contains('popover')) {
-      return;
-    }
+        if (!popover || !popover.classList.contains('popover')) {
+            return;
+        }
 
-    return popover;
-  };
+        return popover;
+    };
 
-  var showHidePopover = function (e) {
-    var popover = getPopover(e);
+    var showHidePopover = function (e) {
+        var popover = getPopover(e);
 
-    if (!popover) {
-      return;
-    }
+        if (!popover) {
+            return;
+        }
 
-    popover.style.display = 'block';
-    popover.offsetHeight;
-    popover.classList.add('visible');
+        popover.style.display = 'block';
+        popover.offsetHeight;
+        popover.classList.add('visible');
 
-    popover.parentNode.appendChild(backdrop);
-  };
+        popover.parentNode.appendChild(backdrop);
+    };
 
-  window.addEventListener('touchend', showHidePopover);
+    window.addEventListener('touchend', showHidePopover);
 
 }());

@@ -150,8 +150,8 @@
     <Content Include="docs\dist\css\ratchet.css" />
     <Content Include="docs\dist\css\ratchet.min.css" />
     <Content Include="docs\dist\fonts\ratchicons.svg" />
-    <Content Include="docs\dist\js\ratchet.js" />
-    <Content Include="docs\dist\js\ratchet.min.js" />
+    <Content Include="docs\dist\js\ratchetPro.js" />
+    <Content Include="docs\dist\js\ratchetPro.min.js" />
     <Content Include="docs\examples.html" />
     <Content Include="docs\examples\app-android-notes\css\app.css" />
     <Content Include="docs\examples\app-android-notes\index.html" />
