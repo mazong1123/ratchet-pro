@@ -554,14 +554,14 @@
 
 }());
 
-/* ========================================================================
- * Ratchet: push.js v2.0.2
- * http://goratchet.com/components#push
- * ========================================================================
- * inspired by @defunkt's jquery.pjax.js
- * Copyright 2015 Connor Sears
- * Licensed under MIT (https://github.com/twbs/ratchet/blob/master/LICENSE)
- * ======================================================================== */
+/* ===================================================================================
+ * RatchetPro: push.js v1.0.0
+ * https://github.com/mazong1123/ratchet-pro
+ * ===================================================================================
+ * Copyright 2015 Jim Ma
+ * Licensed under MIT (https://github.com/mazong1123/ratchet-pro/blob/master/LICENSE)
+ * Originally from https://github.com/twbs/ratchet
+ * =================================================================================== */
 
 /* global _gaq: true */
 
