@@ -91,11 +91,11 @@
         },
 
         click: function (e) {
-            if (e.synthetic) {
+            /*if (e.synthetic) {
                 return;
             }
             e.preventDefault();
-            e.stopPropagation();
+            e.stopPropagation();*/
         },
 
         touchStart: function (e) {
