@@ -22,7 +22,7 @@
     var maxCacheLength = 20;
     var cacheMapping = sessionStorage;
     var domCache = {};
-    var htmlCache = new Array();
+    var htmlCache = [];
 
     // Change these to unquoted camelcase in the next major version bump
     var transitionMap = {

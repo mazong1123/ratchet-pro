@@ -15,7 +15,7 @@
         var pageContentElement = document.querySelector(pageLoaderSettings.pageContentElementSelector);
         var pageName = pageContentElement.getAttribute(pageLoaderSettings.pageNameElementAttributeName);
 
-        if (pageName != null && pageName.length > 0) {
+        if (pageName !== undefined && pageName !== null && pageName.length > 0) {
             // Load page entry script.
             var entryScriptPath = pageLoaderSettings.pageEntryScriptPath + '/' + pageLoaderSettings.pageEntryScriptPrefix + pageName + '.js';
             window.RATCHET.getScript(entryScriptPath, function () {
@@ -43,10 +43,10 @@
             url: url
         };
 
-        if (transition != undefined) {
+        if (transition !== undefined && transition !== null) {
             options.transition = transition;
         }
 
-        PUSH(options);
+        window.RATCHET.push(options);
     };
 }());

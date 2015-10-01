@@ -243,6 +243,10 @@
     <Content Include="sass\toggles.scss" />
     <Content Include="sass\type.scss" />
     <Content Include="sass\variables.scss" />
+    <Content Include="tests\lib\jquery.js" />
+    <Content Include="tests\lib\qunit.css" />
+    <Content Include="tests\lib\qunit.js" />
+    <Content Include="tests\pageLoaderTests.html" />
     <Content Include="_config.yml" />
   </ItemGroup>
   <PropertyGroup>

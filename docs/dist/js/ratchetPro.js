@@ -289,7 +289,7 @@
  * Copyright 2015 Jim Ma
  * Licensed under MIT (https://github.com/mazong1123/ratchet-pro/blob/master/LICENSE)
  * Originally from https://github.com/twbs/ratchet
- * =================================================================================== */
+ * ======================================= ============================================ */
 
 !(function () {
     'use strict';
@@ -311,12 +311,12 @@
 
     // Enable mouse support. Mouse support is disabled by default.
     window.RATCHET.enableMouseSupport = function () {
-        if (typeof window.FingerBlast != 'undefined') {
-            new FingerBlast('body');
+        if (typeof window.FingerBlast !== 'undefined') {
+            new window.FingerBlast('body');
         }
     };
 
-    var loadedScripts = new Array();
+    var loadedScripts = [];
 
     // Using JQuery to load external scripts. Need help to get rid of JQuery.
     window.RATCHET.getScript = function (source, successCallback, failCallback) {
@@ -324,11 +324,11 @@
             console.log('JQuery not found. Cannot load and execute page scripts.');
 
             return;
-        };
+        }
 
         if (loadedScripts.indexOf(source) >= 0) {
             // If the script has already been loaded, don't load it again, just call the success callback.
-            if (successCallback != undefined && typeof successCallback === 'function') {
+            if (successCallback !== undefined && successCallback !== null && typeof successCallback === 'function') {
                 successCallback(null, null, null);
             }
 
@@ -344,7 +344,7 @@
                 // call the success callback.
                 loadedScripts.push(scriptSource);
 
-                if (successCallback != undefined && typeof successCallback === 'function') {
+                if (successCallback !== undefined && successCallback !== null && typeof successCallback === 'function') {
                     successCallback(null, null, null);
                 }
 
@@ -361,11 +361,11 @@
             // Indicates the js has been loaded and executed.
             loadedScripts.push(source);
 
-            if (successCallback != undefined && typeof successCallback === 'function') {
+            if (successCallback !== undefined && successCallback !== null && typeof successCallback === 'function') {
                 successCallback(data, textStatus, jqXHR);
             }
         }).fail(function (jqXHR, textStatus, errorThrown) {
-            if (failCallback != undefined && typeof failCallback === 'function') {
+            if (failCallback !== undefined && successCallback !== null && typeof failCallback === 'function') {
                 failCallback(jqXHR, textStatus, errorThrown);
             }
         });
@@ -578,7 +578,7 @@
     var maxCacheLength = 20;
     var cacheMapping = sessionStorage;
     var domCache = {};
-    var htmlCache = new Array();
+    var htmlCache = [];
 
     // Change these to unquoted camelcase in the next major version bump
     var transitionMap = {
@@ -1453,7 +1453,7 @@
         var pageContentElement = document.querySelector(pageLoaderSettings.pageContentElementSelector);
         var pageName = pageContentElement.getAttribute(pageLoaderSettings.pageNameElementAttributeName);
 
-        if (pageName != null && pageName.length > 0) {
+        if (pageName !== undefined && pageName !== null && pageName.length > 0) {
             // Load page entry script.
             var entryScriptPath = pageLoaderSettings.pageEntryScriptPath + '/' + pageLoaderSettings.pageEntryScriptPrefix + pageName + '.js';
             window.RATCHET.getScript(entryScriptPath, function () {
@@ -1481,10 +1481,10 @@
             url: url
         };
 
-        if (transition != undefined) {
+        if (transition !== undefined && transition !== null) {
             options.transition = transition;
         }
 
-        PUSH(options);
+        window.RATCHET.push(options);
     };
 }());
