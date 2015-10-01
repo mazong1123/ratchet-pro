@@ -12,9 +12,26 @@
     <div id="qunit-fixture"></div>
     <script src="lib/qunit.js"></script>
     <script>
-        QUnit.test("a basic test example", function (assert) {
-            var value = "hello";
-            assert.equal(value, "hello", "We expect value to be hello");
+        QUnit.test("updateSettings Test", function (assert) {
+            // Prepare
+            var expectedSettings = {
+                pageContentElementSelector: '.testcontent',
+                pageNameElementAttributeName: 'testdata-page',
+                pageEntryScriptPath: 'test/scripts',
+                pageEntryScriptPrefix: 'testapp-',
+                pageContentReadyEventSuffix: 'testContentReady'
+            };
+
+            // Act
+            window.RATCHET.PageLoader.updateSettings(expectedSettings);
+            var actualSettings = window.RATCHET.PageLoader.getSettings();
+
+            // Assert
+            assert.equal(actualSettings.pageContentElementSelector, expectedSettings.pageContentElementSelector, 'pageContentElementSelector not equal.');
+            assert.equal(actualSettings.pageNameElementAttributeName, expectedSettings.pageNameElementAttributeName, 'pageNameElementAttributeName not equal.');
+            assert.equal(actualSettings.pageEntryScriptPath, expectedSettings.pageEntryScriptPath, 'pageEntryScriptPath not equal.');
+            assert.equal(actualSettings.pageEntryScriptPrefix, expectedSettings.pageEntryScriptPrefix, 'pageEntryScriptPrefix not equal.');
+            assert.equal(actualSettings.pageContentReadyEventSuffix, expectedSettings.pageContentReadyEventSuffix, 'pageContentReadyEventSuffix not equal.');
         });
     </script>
 </body>

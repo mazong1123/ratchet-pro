@@ -1,5 +1,7 @@
 ﻿(function () {
-    window.RATCHET.pageLoaderSettings.pageEntryScriptPath = 'js';
+    window.RATCHET.PageLoader.updateSettings({
+        pageEntryScriptPath: 'js'
+    });
     window.RATCHET.enableMouseSupport();
 
     var entry = function () {
@@ -7,7 +9,7 @@
 
         $('#changePage').on('click', function (e) {
             e.preventDefault();
-            window.RATCHET.changePage('choose-theater.html', 'slide-in');
+            window.RATCHET.PageLoader.changePage('choose-theater.html', 'slide-in');
         });
     };
 

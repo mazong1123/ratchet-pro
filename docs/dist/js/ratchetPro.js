@@ -8,6 +8,70 @@
  * forked from https://github.com/twbs/ratchet 
  * =====================================================
  */
+/* Simple JavaScript Inheritance
+ * By John Resig http://ejohn.org/
+ * MIT Licensed.
+ */
+// Inspired by base2 and Prototype
+(function(){
+  var initializing = false, fnTest = /xyz/.test(function(){xyz;}) ? /\b_super\b/ : /.*/;
+ 
+  // The base Class implementation (does nothing)
+  this.Class = function(){};
+ 
+  // Create a new Class that inherits from this class
+  Class.extend = function(prop) {
+    var _super = this.prototype;
+   
+    // Instantiate a base class (but only create the instance,
+    // don't run the init constructor)
+    initializing = true;
+    var prototype = new this();
+    initializing = false;
+   
+    // Copy the properties over onto the new prototype
+    for (var name in prop) {
+      // Check if we're overwriting an existing function
+      prototype[name] = typeof prop[name] == "function" &&
+        typeof _super[name] == "function" && fnTest.test(prop[name]) ?
+        (function(name, fn){
+          return function() {
+            var tmp = this._super;
+           
+            // Add a new ._super() method that is the same method
+            // but on the super-class
+            this._super = _super[name];
+           
+            // The method only need to be bound temporarily, so we
+            // remove it when we're done executing
+            var ret = fn.apply(this, arguments);        
+            this._super = tmp;
+           
+            return ret;
+          };
+        })(name, prop[name]) :
+        prop[name];
+    }
+   
+    // The dummy class constructor
+    function Class() {
+      // All construction is actually done in the init method
+      if ( !initializing && this.init )
+        this.init.apply(this, arguments);
+    }
+   
+    // Populate our constructed prototype object
+    Class.prototype = prototype;
+   
+    // Enforce the constructor to be what we expect
+    Class.prototype.constructor = Class;
+ 
+    // And make this class extendable
+    Class.extend = arguments.callee;
+   
+    return Class;
+  };
+})();
 // FINGERBLAST.js
 // --------------
 // Adapted from phantom limb by Brian Cartensen
@@ -309,6 +373,10 @@
         window.RATCHET = {};
     }
 
+    if (typeof window.RATCHET.Definition === 'undefined') {
+        window.RATCHET.Definition = {};
+    }
+
     // Enable mouse support. Mouse support is disabled by default.
     window.RATCHET.enableMouseSupport = function () {
         if (typeof window.FingerBlast !== 'undefined') {
@@ -402,15 +470,6 @@
 
         return transEndEventNames.transition;
     })();
-
-    // Default page loader settings. Used by pageloader.js.
-    window.RATCHET.pageLoaderSettings = {
-        pageContentElementSelector: '.content',
-        pageNameElementAttributeName: 'data-page',
-        pageEntryScriptPath: 'scripts',
-        pageEntryScriptPrefix: 'app-',
-        pageContentReadyEventSuffix: 'ContentReady'
-    };
 }());
 
 /* ========================================================================
@@ -1458,44 +1517,99 @@
 !(function () {
     'use strict';
 
-    var checkPage = function () {
-        var pageLoaderSettings = window.RATCHET.pageLoaderSettings;
-
-        var pageContentElement = document.querySelector(pageLoaderSettings.pageContentElementSelector);
-        var pageName = pageContentElement.getAttribute(pageLoaderSettings.pageNameElementAttributeName);
-
-        if (pageName !== undefined && pageName !== null && pageName.length > 0) {
-            // Load page entry script.
-            var entryScriptPath = pageLoaderSettings.pageEntryScriptPath + '/' + pageLoaderSettings.pageEntryScriptPrefix + pageName + '.js';
-            window.RATCHET.getScript(entryScriptPath, function () {
-                // Fire page content ready event.
-                var eventName = pageName + pageLoaderSettings.pageContentReadyEventSuffix;
-                var pageContentReadyEvent = new CustomEvent(eventName, {
-                    detail: {},
-                    bubbles: true,
-                    cancelable: true
-                });
-
-                document.dispatchEvent(pageContentReadyEvent);
-            }, function (jqXHR, textStatus, errorThrown) {
-                console.log(textStatus);
-                console.log(errorThrown);
-            });
-        }
+    var pageLoaderSettings = {
+        pageContentElementSelector: '.content',
+        pageNameElementAttributeName: 'data-page',
+        pageEntryScriptPath: 'scripts',
+        pageEntryScriptPrefix: 'app-',
+        pageContentReadyEventSuffix: 'ContentReady'
     };
 
-    // Inject checkPage() after push event fired.
-    window.addEventListener('push', checkPage);
+    window.RATCHET.Definition.PageLoader = Class.extend({
+        init: function (settings) {
+            var self = this;
 
-    window.RATCHET.changePage = function (url, transition) {
-        var options = {
-            url: url
-        };
+            updateSettings(self, settings);
 
-        if (transition !== undefined && transition !== null) {
-            options.transition = transition;
+            // Inject checkPage() after push event fired.
+            window.removeEventListener('push', self.checkPage);
+            window.addEventListener('push', self.checkPage);
+        },
+
+        changePage: function (url, transition) {
+            var options = {
+                url: url
+            };
+
+            if (transition !== undefined && transition !== null) {
+                options.transition = transition;
+            }
+
+            window.RATCHET.push(options);
+        },
+
+        checkPage: function () {
+            var pageContentElement = document.querySelector(pageLoaderSettings.pageContentElementSelector);
+            var pageName = pageContentElement.getAttribute(pageLoaderSettings.pageNameElementAttributeName);
+
+            if (pageName !== undefined && pageName !== null && pageName.length > 0) {
+                // Load page entry script.
+                var entryScriptPath = pageLoaderSettings.pageEntryScriptPath + '/' + pageLoaderSettings.pageEntryScriptPrefix + pageName + '.js';
+                window.RATCHET.getScript(entryScriptPath, function () {
+                    // Fire page content ready event.
+                    var eventName = pageName + pageLoaderSettings.pageContentReadyEventSuffix;
+                    var pageContentReadyEvent = new CustomEvent(eventName, {
+                        detail: {},
+                        bubbles: true,
+                        cancelable: true
+                    });
+
+                    document.dispatchEvent(pageContentReadyEvent);
+                }, function (jqXHR, textStatus, errorThrown) {
+                    console.log(textStatus);
+                    console.log(errorThrown);
+                });
+            }
+        },
+
+        updateSettings: function (settings) {
+            var self = this;
+
+            updateSettings(self, settings);
+        },
+
+        getSettings: function () {
+            return pageLoaderSettings;
+        }
+    });
+
+    var updateSettings = function (instance, newSettings) {
+        if (newSettings === undefined || newSettings === null) {
+            return;
         }
 
-        window.RATCHET.push(options);
+        if (newSettings.pageContentElementSelector !== undefined) {
+            pageLoaderSettings.pageContentElementSelector = newSettings.pageContentElementSelector;
+        }
+
+        if (newSettings.pageNameElementAttributeName !== undefined) {
+            pageLoaderSettings.pageNameElementAttributeName = newSettings.pageNameElementAttributeName;
+        }
+
+        if (newSettings.pageEntryScriptPath !== undefined) {
+            pageLoaderSettings.pageEntryScriptPath = newSettings.pageEntryScriptPath;
+        }
+
+        if (newSettings.pageEntryScriptPrefix !== undefined) {
+            pageLoaderSettings.pageEntryScriptPrefix = newSettings.pageEntryScriptPrefix;
+        }
+
+        if (newSettings.pageContentReadyEventSuffix !== undefined) {
+            pageLoaderSettings.pageContentReadyEventSuffix = newSettings.pageContentReadyEventSuffix;
+        }
     };
 }());
+
+(function () {
+    window.RATCHET.PageLoader = new window.RATCHET.Definition.PageLoader();
+})();

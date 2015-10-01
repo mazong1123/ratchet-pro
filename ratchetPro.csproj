@@ -188,6 +188,7 @@
     <Content Include="fonts\ratchicons.svg" />
     <Content Include="Gruntfile.js" />
     <Content Include="grunt\ratchicons-data-generator.js" />
+    <Content Include="js\class.js" />
     <Content Include="js\common.js" />
     <Content Include="js\fingerblast.js" />
     <Content Include="js\modals.js" />
@@ -196,6 +197,7 @@
     <Content Include="js\push.js" />
     <Content Include="js\segmented-controllers.js" />
     <Content Include="js\sliders.js" />
+    <Content Include="js\startup.js" />
     <Content Include="js\toggles.js" />
   </ItemGroup>
   <ItemGroup>

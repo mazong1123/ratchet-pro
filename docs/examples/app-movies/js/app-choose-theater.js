@@ -1,5 +1,7 @@
 ﻿(function () {
-    window.RATCHET.pageLoaderSettings.pageEntryScriptPath = 'js';
+    window.RATCHET.PageLoader.updateSettings({
+        pageEntryScriptPath: 'js'
+    });
 
     var entry = function () {
         console.log('entry point of choose-theater page.');

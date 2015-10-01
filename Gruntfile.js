@@ -53,6 +53,7 @@ module.exports = function (grunt) {
                     banner: '<%= banner %>'
                 },
                 src: [
+                  'js/class.js',
                   'js/fingerblast.js',
                   'js/common.js',
                   'js/modals.js',
@@ -61,7 +62,8 @@ module.exports = function (grunt) {
                   'js/segmented-controllers.js',
                   'js/sliders.js',
                   'js/toggles.js',
-                  'js/pageLoader.js'
+                  'js/pageLoader.js',
+                  'js/startup.js'
                 ],
                 dest: '<%= meta.distPath %>js/<%= pkg.name %>.js'
             }

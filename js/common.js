@@ -25,6 +25,10 @@
         window.RATCHET = {};
     }
 
+    if (typeof window.RATCHET.Definition === 'undefined') {
+        window.RATCHET.Definition = {};
+    }
+
     // Enable mouse support. Mouse support is disabled by default.
     window.RATCHET.enableMouseSupport = function () {
         if (typeof window.FingerBlast !== 'undefined') {
@@ -118,13 +122,4 @@
 
         return transEndEventNames.transition;
     })();
-
-    // Default page loader settings. Used by pageloader.js.
-    window.RATCHET.pageLoaderSettings = {
-        pageContentElementSelector: '.content',
-        pageNameElementAttributeName: 'data-page',
-        pageEntryScriptPath: 'scripts',
-        pageEntryScriptPrefix: 'app-',
-        pageContentReadyEventSuffix: 'ContentReady'
-    };
 }());
