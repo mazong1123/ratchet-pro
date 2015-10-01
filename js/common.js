@@ -36,7 +36,7 @@
 
     // Using JQuery to load external scripts. Need help to get rid of JQuery.
     window.RATCHET.getScript = function (source, successCallback, failCallback) {
-        if (typeof $ === 'undefined') {
+        if (typeof window.jQuery === 'undefined') {
             console.log('JQuery not found. Cannot load and execute page scripts.');
 
             return;
@@ -73,7 +73,7 @@
             dataType: 'script'
         };
 
-        $.ajax(getScriptOptions).done(function (data, textStatus, jqXHR) {
+        jQuery.ajax(getScriptOptions).done(function (data, textStatus, jqXHR) {
             // Indicates the js has been loaded and executed.
             loadedScripts.push(source);
 

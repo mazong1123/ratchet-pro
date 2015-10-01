@@ -320,7 +320,7 @@
 
     // Using JQuery to load external scripts. Need help to get rid of JQuery.
     window.RATCHET.getScript = function (source, successCallback, failCallback) {
-        if (typeof $ === 'undefined') {
+        if (typeof window.jQuery === 'undefined') {
             console.log('JQuery not found. Cannot load and execute page scripts.');
 
             return;
@@ -357,7 +357,7 @@
             dataType: 'script'
         };
 
-        $.ajax(getScriptOptions).done(function (data, textStatus, jqXHR) {
+        jQuery.ajax(getScriptOptions).done(function (data, textStatus, jqXHR) {
             // Indicates the js has been loaded and executed.
             loadedScripts.push(source);
 
@@ -793,6 +793,11 @@
         // Load from cache at first.
         var cachedHtml = htmlCache[options.url];
         if (cachedHtml !== undefined) {
+            if (typeof window.jQuery !== 'undefined') {
+                // If jQuery used, remove all jQuery event listeners of current page to prevent duplicate event listeners issue.
+                jQuery(options.container).find('*').off();
+            }
+
             renderData(cachedHtml, options);
             cachePush();
 
@@ -854,6 +859,12 @@
 
     var success = function (xhr, options) {
         var data = parseXHR(xhr, options);
+
+        if (typeof window.jQuery !== 'undefined') {
+            // If jQuery used, remove all jQuery event listeners of current page to prevent duplicate event listeners issue.
+            jQuery(options.container).find('*').off();
+        }
+
         renderData(data, options);
 
         // Cache the loaded html data.
