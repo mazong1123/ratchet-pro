@@ -1,23 +1,16 @@
 ﻿(function () {
-    window.RATCHET.PageLoader.updateSettings({
-        pageEntryScriptPath: 'js'
-    });
-    window.RATCHET.enableMouseSupport();
+    window.RATCHET.Definition.PageManager.settings.pageEntryScriptPath = 'js';
 
-    var entry = function () {
+    // Not recommended. Do not use in Production environment at this time.
+    window.RATCHET.Definition.PageManager.enableMouseSupport();
+
+    var rachetPageManager = new window.RATCHET.Definition.PageManager();
+    rachetPageManager.ready(function () {
         console.log('entry point of index page.');
 
         $('#changePage').on('click', function (e) {
             e.preventDefault();
-            window.RATCHET.PageLoader.changePage('choose-theater.html', 'slide-in');
+            rachetPageManager.changePage('choose-theater.html', 'slide-in');
         });
-    };
-
-    document.addEventListener('DOMContentLoaded', function () {
-        entry();
-    });
-
-    document.addEventListener('indexContentReady', function () {
-        entry();
     });
 })();

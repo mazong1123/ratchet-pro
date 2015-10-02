@@ -22,9 +22,11 @@
                 pageContentReadyEventSuffix: 'testContentReady'
             };
 
+            var pageManager = new window.RATCHET.Definition.PageManager();
+
             // Act
-            window.RATCHET.PageLoader.updateSettings(expectedSettings);
-            var actualSettings = window.RATCHET.PageLoader.getSettings();
+            window.RATCHET.Definition.PageManager.settings = expectedSettings;
+            var actualSettings = window.RATCHET.Definition.PageManager.settings;
 
             // Assert
             assert.equal(actualSettings.pageContentElementSelector, expectedSettings.pageContentElementSelector, 'pageContentElementSelector not equal.');

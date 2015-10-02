@@ -192,7 +192,7 @@
     <Content Include="js\common.js" />
     <Content Include="js\fingerblast.js" />
     <Content Include="js\modals.js" />
-    <Content Include="js\pageLoader.js" />
+    <Content Include="js\pageManager.js" />
     <Content Include="js\popovers.js" />
     <Content Include="js\push.js" />
     <Content Include="js\segmented-controllers.js" />

@@ -1,13 +1,8 @@
 ﻿(function () {
-    window.RATCHET.PageLoader.updateSettings({
-        pageEntryScriptPath: 'js'
-    });
+    window.RATCHET.Definition.PageManager.settings.pageEntryScriptPath = 'js';
 
-    var entry = function () {
+    var rachetPageManager = new window.RATCHET.Definition.PageManager();
+    rachetPageManager.ready(function () {
         console.log('entry point of choose-theater page.');
-    };
-
-    document.addEventListener('DOMContentLoaded', entry);
-
-    document.addEventListener('choose-theaterContentReady', entry);
+    });
 })();
