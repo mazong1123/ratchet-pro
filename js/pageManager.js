@@ -6,7 +6,7 @@
  * Licensed under MIT (https://github.com/mazong1123/ratchet-pro/blob/master/LICENSE)
  * =================================================================================== */
 
-!(function () {
+(function () {
     'use strict';
 
     window.RATCHET.Class.PageManager = Class.extend({
@@ -57,7 +57,7 @@
                 options.transition = transition;
             }
 
-            window.RATCHET.push(options);
+            window.RATCHET.Class.Pusher.push(options);
         }
     });
 
@@ -111,4 +111,4 @@
     // Inject checkPage() after push event fired.
     window.removeEventListener('push', checkPage);
     window.addEventListener('push', checkPage);
-}());
+})();

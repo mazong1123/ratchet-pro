@@ -607,7 +607,7 @@
 }());
 
 /* ===================================================================================
- * RatchetPro: push.js v1.0.0
+ * RatchetPro: pusher.js v1.0.0
  * https://github.com/mazong1123/ratchet-pro
  * ===================================================================================
  * Copyright 2015 Jim Ma
@@ -617,22 +617,16 @@
 
 /* global _gaq: true */
 
-!(function () {
+(function () {
     'use strict';
-
-    var noop = function () { };
-
-
-    // Pushstate caching
-    // ==================
 
     var isScrolling;
     var maxCacheLength = 20;
     var cacheMapping = sessionStorage;
     var domCache = {};
     var htmlCache = [];
+    var pushId = undefined;
 
-    // Change these to unquoted camelcase in the next major version bump
     var transitionMap = {
         'slide-in': 'slide-out',
         'slide-out': 'slide-in',
@@ -646,178 +640,12 @@
         barheadersecondary: '.bar-header-secondary'
     };
 
-    var cacheReplace = function (data, updates) {
-        PUSH.id = data.id;
-        if (updates) {
-            data = getCached(data.id);
+    window.RATCHET.Class.Pusher = Class.extend({
+        init: function () {
         }
-        cacheMapping[data.id] = JSON.stringify(data);
-        window.history.replaceState(data.id, data.title, data.url);
-    };
+    });
 
-    var cachePush = function () {
-        var id = PUSH.id;
-
-        var cacheForwardStack = JSON.parse(cacheMapping.cacheForwardStack || '[]');
-        var cacheBackStack = JSON.parse(cacheMapping.cacheBackStack || '[]');
-
-        cacheBackStack.push(id);
-
-        while (cacheForwardStack.length) {
-            delete cacheMapping[cacheForwardStack.shift()];
-        }
-        while (cacheBackStack.length > maxCacheLength) {
-            delete cacheMapping[cacheBackStack.shift()];
-        }
-
-        if (getCached(PUSH.id).url) {
-            window.history.pushState(null, '', getCached(PUSH.id).url);
-        }
-
-        cacheMapping.cacheForwardStack = JSON.stringify(cacheForwardStack);
-        cacheMapping.cacheBackStack = JSON.stringify(cacheBackStack);
-    };
-
-    var cachePop = function (id, direction) {
-        var forward = direction === 'forward';
-        var cacheForwardStack = JSON.parse(cacheMapping.cacheForwardStack || '[]');
-        var cacheBackStack = JSON.parse(cacheMapping.cacheBackStack || '[]');
-        var pushStack = forward ? cacheBackStack : cacheForwardStack;
-        var popStack = forward ? cacheForwardStack : cacheBackStack;
-
-        if (PUSH.id) {
-            pushStack.push(PUSH.id);
-        }
-        popStack.pop();
-
-        cacheMapping.cacheForwardStack = JSON.stringify(cacheForwardStack);
-        cacheMapping.cacheBackStack = JSON.stringify(cacheBackStack);
-    };
-
-    var getCached = function (id) {
-        return JSON.parse(cacheMapping[id] || null) || {};
-    };
-
-    var getTarget = function (e) {
-        var target = findTarget(e.target);
-
-        if (!target ||
-            e.which > 1 ||
-            e.metaKey ||
-            e.ctrlKey ||
-            isScrolling ||
-            location.protocol !== target.protocol ||
-            location.host !== target.host ||
-            !target.hash && /#/.test(target.href) ||
-            target.hash && target.href.replace(target.hash, '') === location.href.replace(location.hash, '') ||
-            target.getAttribute('data-ignore') === 'push') { return; }
-
-        return target;
-    };
-
-
-    // Main event handlers (touchend, popstate)
-    // ==========================================
-
-    var touchend = function (e) {
-        var target = getTarget(e);
-
-        if (!target) {
-            return;
-        }
-
-        e.preventDefault();
-
-        PUSH({
-            url: target.href,
-            hash: target.hash,
-            timeout: target.getAttribute('data-timeout'),
-            transition: target.getAttribute('data-transition')
-        });
-    };
-
-    var popstate = function (e) {
-        var key;
-        var barElement;
-        var activeObj;
-        var activeDom;
-        var direction;
-        var transition;
-        var transitionFrom;
-        var transitionFromObj;
-        var id = e.state;
-
-        if (!id || !cacheMapping[id]) {
-            return;
-        }
-
-        direction = PUSH.id < id ? 'forward' : 'back';
-
-        cachePop(id, direction);
-
-        activeObj = getCached(id);
-        activeDom = domCache[id];
-
-        if (activeObj.title) {
-            document.title = activeObj.title;
-        }
-
-        if (direction === 'back') {
-            transitionFrom = JSON.parse(direction === 'back' ? cacheMapping.cacheForwardStack : cacheMapping.cacheBackStack);
-            transitionFromObj = getCached(transitionFrom[transitionFrom.length - 1]);
-        } else {
-            transitionFromObj = activeObj;
-        }
-
-        if (direction === 'back' && !transitionFromObj.id) {
-            return (PUSH.id = id);
-        }
-
-        transition = direction === 'back' ? transitionMap[transitionFromObj.transition] : transitionFromObj.transition;
-
-        if (!activeDom) {
-            return PUSH({
-                id: activeObj.id,
-                url: activeObj.url,
-                title: activeObj.title,
-                timeout: activeObj.timeout,
-                transition: transition,
-                ignorePush: true
-            });
-        }
-
-        if (transitionFromObj.transition) {
-            activeObj = extendWithDom(activeObj, '.content', activeDom.cloneNode(true));
-            for (key in bars) {
-                if (bars.hasOwnProperty(key)) {
-                    barElement = document.querySelector(bars[key]);
-                    if (activeObj[key]) {
-                        swapContent(activeObj[key], barElement);
-                    } else if (barElement) {
-                        barElement.parentNode.removeChild(barElement);
-                    }
-                }
-            }
-        }
-
-        swapContent(
-          (activeObj.contents || activeDom).cloneNode(true),
-          document.querySelector('.content'),
-          transition, function () {
-              triggerStateChange();
-          }
-        );
-
-        PUSH.id = id;
-
-        document.body.offsetHeight; // force reflow to prevent scroll
-    };
-
-
-    // Core PUSH functionality
-    // =======================
-
-    var PUSH = function (options) {
+    window.RATCHET.Class.Pusher.push = function (options) {
         var key;
 
         options.container = options.container || options.transition ? document.querySelector('.content') : document.body;
@@ -830,7 +658,7 @@
             }
         }
 
-        if (!PUSH.id) {
+        if (!pushId) {
             cacheReplace({
                 id: +new Date(),
                 url: window.location.href,
@@ -856,13 +684,7 @@
             return;
         }
 
-        var xhr = PUSH.xhr;
-        if (xhr && xhr.readyState < 4) {
-            xhr.onreadystatechange = noop;
-            xhr.abort();
-        }
-
-        xhr = new XMLHttpRequest();
+        var xhr = new XMLHttpRequest();
         if (isFileProtocol) {
             xhr.open('GET', options.url, false);
         } else {
@@ -902,9 +724,182 @@
         }
     };
 
-    function cacheCurrentContent() {
-        domCache[PUSH.id] = document.body.cloneNode(true);
-    }
+    // Pushstate caching
+    // ==================
+
+    var cacheReplace = function (data, updates) {
+        pushId = data.id;
+        if (updates) {
+            data = getCached(data.id);
+        }
+
+        cacheMapping[data.id] = JSON.stringify(data);
+        window.history.replaceState(data.id, data.title, data.url);
+    };
+
+    var cachePush = function () {
+        var id = pushId;
+
+        var cacheForwardStack = JSON.parse(cacheMapping.cacheForwardStack || '[]');
+        var cacheBackStack = JSON.parse(cacheMapping.cacheBackStack || '[]');
+
+        cacheBackStack.push(id);
+
+        while (cacheForwardStack.length) {
+            delete cacheMapping[cacheForwardStack.shift()];
+        }
+        while (cacheBackStack.length > maxCacheLength) {
+            delete cacheMapping[cacheBackStack.shift()];
+        }
+
+        if (getCached(pushId).url) {
+            window.history.pushState(null, '', getCached(pushId).url);
+        }
+
+        cacheMapping.cacheForwardStack = JSON.stringify(cacheForwardStack);
+        cacheMapping.cacheBackStack = JSON.stringify(cacheBackStack);
+    };
+
+    var cachePop = function (id, direction) {
+        var forward = direction === 'forward';
+        var cacheForwardStack = JSON.parse(cacheMapping.cacheForwardStack || '[]');
+        var cacheBackStack = JSON.parse(cacheMapping.cacheBackStack || '[]');
+        var pushStack = forward ? cacheBackStack : cacheForwardStack;
+        var popStack = forward ? cacheForwardStack : cacheBackStack;
+
+        if (pushId) {
+            pushStack.push(pushId);
+        }
+        popStack.pop();
+
+        cacheMapping.cacheForwardStack = JSON.stringify(cacheForwardStack);
+        cacheMapping.cacheBackStack = JSON.stringify(cacheBackStack);
+    };
+
+    var getCached = function (id) {
+        return JSON.parse(cacheMapping[id] || null) || {};
+    };
+
+    var getTarget = function (e) {
+        var target = findTarget(e.target);
+
+        if (!target ||
+            e.which > 1 ||
+            e.metaKey ||
+            e.ctrlKey ||
+            isScrolling ||
+            location.protocol !== target.protocol ||
+            location.host !== target.host ||
+            !target.hash && /#/.test(target.href) ||
+            target.hash && target.href.replace(target.hash, '') === location.href.replace(location.hash, '') ||
+            target.getAttribute('data-ignore') === 'push') { return; }
+
+        return target;
+    };
+
+    // Main event handlers (touchend, popstate)
+    // ==========================================
+
+    var touchend = function (e) {
+        var target = getTarget(e);
+
+        if (!target) {
+            return;
+        }
+
+        e.preventDefault();
+
+        window.RATCHET.Class.Pusher.push({
+            url: target.href,
+            hash: target.hash,
+            timeout: target.getAttribute('data-timeout'),
+            transition: target.getAttribute('data-transition')
+        });
+    };
+
+    var popstate = function (e) {
+        var key;
+        var barElement;
+        var activeObj;
+        var activeDom;
+        var direction;
+        var transition;
+        var transitionFrom;
+        var transitionFromObj;
+        var id = e.state;
+
+        if (!id || !cacheMapping[id]) {
+            return;
+        }
+
+        direction = pushId < id ? 'forward' : 'back';
+
+        cachePop(id, direction);
+
+        activeObj = getCached(id);
+        activeDom = domCache[id];
+
+        if (activeObj.title) {
+            document.title = activeObj.title;
+        }
+
+        if (direction === 'back') {
+            transitionFrom = JSON.parse(direction === 'back' ? cacheMapping.cacheForwardStack : cacheMapping.cacheBackStack);
+            transitionFromObj = getCached(transitionFrom[transitionFrom.length - 1]);
+        } else {
+            transitionFromObj = activeObj;
+        }
+
+        if (direction === 'back' && !transitionFromObj.id) {
+            return (pushId = id);
+        }
+
+        transition = direction === 'back' ? transitionMap[transitionFromObj.transition] : transitionFromObj.transition;
+
+        if (!activeDom) {
+            return window.RATCHET.Class.Pusher.push({
+                id: activeObj.id,
+                url: activeObj.url,
+                title: activeObj.title,
+                timeout: activeObj.timeout,
+                transition: transition,
+                ignorePush: true
+            });
+        }
+
+        if (transitionFromObj.transition) {
+            activeObj = extendWithDom(activeObj, '.content', activeDom.cloneNode(true));
+            for (key in bars) {
+                if (bars.hasOwnProperty(key)) {
+                    barElement = document.querySelector(bars[key]);
+                    if (activeObj[key]) {
+                        swapContent(activeObj[key], barElement);
+                    } else if (barElement) {
+                        barElement.parentNode.removeChild(barElement);
+                    }
+                }
+            }
+        }
+
+        swapContent(
+          (activeObj.contents || activeDom).cloneNode(true),
+          document.querySelector('.content'),
+          transition, function () {
+              triggerStateChange();
+          }
+        );
+
+        pushId = id;
+
+        document.body.offsetHeight; // force reflow to prevent scroll
+    };
+
+    // Core PUSH functionality
+    // =======================
+
+    var cacheCurrentContent = function () {
+        domCache[pushId] = document.body.cloneNode(true);
+    };
 
     // Main XHR handlers
     // =================
@@ -969,6 +964,7 @@
         if (!options.ignorePush && window._gaq) {
             _gaq.push(['_trackPageview']); // google analytics
         }
+
         if (!options.hash) {
             return;
         }
@@ -1054,7 +1050,7 @@
 
     var triggerStateChange = function () {
         var e = new CustomEvent('push', {
-            detail: { state: getCached(PUSH.id) },
+            detail: { state: getCached(pushId) },
             bubbles: true,
             cancelable: true
         });
@@ -1138,7 +1134,6 @@
         return data;
     };
 
-
     // Attach PUSH event handlers
     // ==========================
 
@@ -1151,12 +1146,7 @@
         }
     });
     window.addEventListener('popstate', popstate);
-
-    // TODO : Remove this line in the next major version
-    window.PUSH = PUSH;
-    window.RATCHET.push = PUSH;
-
-}());
+})();
 
 /* ========================================================================
  * Ratchet: segmented-controllers.js v2.0.2
@@ -1507,7 +1497,7 @@
  * Licensed under MIT (https://github.com/mazong1123/ratchet-pro/blob/master/LICENSE)
  * =================================================================================== */
 
-!(function () {
+(function () {
     'use strict';
 
     window.RATCHET.Class.PageManager = Class.extend({
@@ -1558,7 +1548,7 @@
                 options.transition = transition;
             }
 
-            window.RATCHET.push(options);
+            window.RATCHET.Class.Pusher.push(options);
         }
     });
 
@@ -1612,7 +1602,7 @@
     // Inject checkPage() after push event fired.
     window.removeEventListener('push', checkPage);
     window.addEventListener('push', checkPage);
-}());
+})();
 
 (function () {
 })();

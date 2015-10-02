@@ -58,7 +58,7 @@ module.exports = function (grunt) {
                   'js/common.js',
                   'js/modals.js',
                   'js/popovers.js',
-                  'js/push.js',
+                  'js/pusher.js',
                   'js/segmented-controllers.js',
                   'js/sliders.js',
                   'js/toggles.js',
