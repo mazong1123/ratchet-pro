@@ -9,7 +9,7 @@
 !(function () {
     'use strict';
 
-    window.RATCHET.Definition.PageManager = Class.extend({
+    window.RATCHET.Class.PageManager = Class.extend({
         init: function () {
             var self = this;
 
@@ -37,7 +37,7 @@
             document.removeEventListener('DOMContentLoaded', self.domContentLoadedCallback);
             document.addEventListener('DOMContentLoaded', self.domContentLoadedCallback);
 
-            var settings = window.RATCHET.Definition.PageManager.settings;
+            var settings = window.RATCHET.Class.PageManager.settings;
 
             // Bind page changing event handler.
             var pageName = getPageName();
@@ -61,7 +61,7 @@
         }
     });
 
-    window.RATCHET.Definition.PageManager.settings = {
+    window.RATCHET.Class.PageManager.settings = {
         pageContentElementSelector: '.content',
         pageNameElementAttributeName: 'data-page',
         pageEntryScriptPath: 'scripts',
@@ -69,14 +69,14 @@
         pageContentReadyEventSuffix: 'ContentReady'
     };
 
-    window.RATCHET.Definition.PageManager.enableMouseSupport = function () {
+    window.RATCHET.Class.PageManager.enableMouseSupport = function () {
         if (typeof window.FingerBlast !== 'undefined') {
             new window.FingerBlast('body');
         }
     };
 
     var getPageName = function () {
-        var settings = window.RATCHET.Definition.PageManager.settings;
+        var settings = window.RATCHET.Class.PageManager.settings;
 
         var pageContentElement = document.querySelector(settings.pageContentElementSelector);
         var pageName = pageContentElement.getAttribute(settings.pageNameElementAttributeName);
@@ -85,7 +85,7 @@
     };
 
     var checkPage = function () {
-        var settings = window.RATCHET.Definition.PageManager.settings;
+        var settings = window.RATCHET.Class.PageManager.settings;
 
         var pageName = getPageName();
         if (pageName !== undefined && pageName !== null && pageName.length > 0) {

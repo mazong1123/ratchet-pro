@@ -25,8 +25,8 @@
         window.RATCHET = {};
     }
 
-    if (typeof window.RATCHET.Definition === 'undefined') {
-        window.RATCHET.Definition = {};
+    if (typeof window.RATCHET.Class === 'undefined') {
+        window.RATCHET.Class = {};
     }
 
     var loadedScripts = [];

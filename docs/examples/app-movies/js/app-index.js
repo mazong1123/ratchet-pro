@@ -1,10 +1,10 @@
 ﻿(function () {
-    window.RATCHET.Definition.PageManager.settings.pageEntryScriptPath = 'js';
+    window.RATCHET.Class.PageManager.settings.pageEntryScriptPath = 'js';
 
     // Not recommended. Do not use in Production environment at this time.
-    window.RATCHET.Definition.PageManager.enableMouseSupport();
+    window.RATCHET.Class.PageManager.enableMouseSupport();
 
-    var rachetPageManager = new window.RATCHET.Definition.PageManager();
+    var rachetPageManager = new window.RATCHET.Class.PageManager();
     rachetPageManager.ready(function () {
         console.log('entry point of index page.');
 
