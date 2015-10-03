@@ -37,10 +37,14 @@
         }
     });
 
+    window.RATCHET.Class.Pusher.settings = {
+        pageContentElementSelector: '.content'
+    };
+
     window.RATCHET.Class.Pusher.push = function (options) {
         var key;
 
-        options.container = options.container || options.transition ? document.querySelector('.content') : document.body;
+        options.container = options.container || options.transition ? document.querySelector(window.RATCHET.Class.Pusher.settings.pageContentElementSelector) : document.body;
 
         var isFileProtocol = /^file:/.test(window.location.protocol);
 
@@ -260,7 +264,7 @@
         }
 
         if (transitionFromObj.transition) {
-            activeObj = extendWithDom(activeObj, '.content', activeDom.cloneNode(true));
+            activeObj = extendWithDom(activeObj, window.RATCHET.Class.Pusher.settings.pageContentElementSelector, activeDom.cloneNode(true));
             for (key in bars) {
                 if (bars.hasOwnProperty(key)) {
                     barElement = document.querySelector(bars[key]);
@@ -275,7 +279,7 @@
 
         swapContent(
           (activeObj.contents || activeDom).cloneNode(true),
-          document.querySelector('.content'),
+          document.querySelector(window.RATCHET.Class.Pusher.settings.pageContentElementSelector),
           transition, function () {
               triggerStateChange();
           }
@@ -373,7 +377,7 @@
             } else if (swap.classList.contains('content')) {
                 document.body.appendChild(swap);
             } else {
-                document.body.insertBefore(swap, document.querySelector('.content'));
+                document.body.insertBefore(swap, document.querySelector(window.RATCHET.Class.Pusher.settings.pageContentElementSelector));
             }
         } else {
             enter = /in$/.test(transition);
@@ -518,7 +522,7 @@
         data.title = data.title && data.title[text].trim();
 
         if (options.transition) {
-            data = extendWithDom(data, '.content', body);
+            data = extendWithDom(data, window.RATCHET.Class.Pusher.settings.pageContentElementSelector, body);
         } else {
             data.contents = body;
         }
