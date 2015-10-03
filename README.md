@@ -1,6 +1,6 @@
 # RatchetPro
 
-A lightweight framework build on ratchetjs.
+A lightweight mobile framework. Re-written from ratchetjs (https://github.com/twbs/ratchet).
 
 ## License
 
