@@ -194,7 +194,7 @@
     <Content Include="js\fingerblast.js" />
     <Content Include="js\modal.js" />
     <Content Include="js\pageManager.js" />
-    <Content Include="js\popovers.js" />
+    <Content Include="js\popover.js" />
     <Content Include="js\pusher.js" />
     <Content Include="js\segmented-controllers.js" />
     <Content Include="js\sliders.js" />

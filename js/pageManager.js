@@ -79,10 +79,18 @@
                     continue;
                 }
 
+                var newComponent = null;
                 if (component.classList.contains('modal')) {
                     // It's a modal.
-                    var newModel = new window.RATCHET.Class.Modal(toggle, component);
-                    self.components.push(newModel);
+                    newComponent = new window.RATCHET.Class.Modal(toggle, component);
+                }
+                else if (component.classList.contains('popover')) {
+                    // It's a popover.
+                    newComponent = new window.RATCHET.Class.Popover(toggle, component);
+                }
+
+                if (newComponent !== null) {
+                    self.components.push(newComponent);
                 }
             }
         },
