@@ -465,59 +465,88 @@
     })();
 }());
 
-/* ========================================================================
- * Ratchet: modals.js v2.0.2
- * http://goratchet.com/components#modals
- * ========================================================================
- * Copyright 2015 Connor Sears
- * Licensed under MIT (https://github.com/twbs/ratchet/blob/master/LICENSE)
- * ======================================================================== */
+/* ===================================================================================
+ * RatchetPro: component.js v1.0.0
+ * https://github.com/mazong1123/ratchet-pro
+ * ===================================================================================
+ * Copyright 2015 Jim Ma
+ * Licensed under MIT (https://github.com/mazong1123/ratchet-pro/blob/master/LICENSE)
+ * Originally from https://github.com/twbs/ratchet
+ * =================================================================================== */
 
-!(function () {
+(function () {
+    'use strict';
+
+    window.RATCHET.Class.Component = Class.extend({
+        init: function (componentToggle, component) {
+            var self = this;
+
+            self.componentToggle = componentToggle;
+            self.component = component;
+
+            self.componentToggleTouchEnd = function (event) {
+                self.onComponentToggleTouchEnd(event);
+            };
+
+            self.componentToggle.addEventListener('touchend', self.componentToggleTouchEnd);
+        },
+
+        dispose: function () {
+            var self = this;
+            self.componentToggle.removeEventListener('touchend', self.componentToggleTouchEnd);
+        },
+
+        onComponentToggleTouchEnd: function (event) {
+            // To be overrided by the inherited class.
+        }
+    });
+})();
+/* ===================================================================================
+ * RatchetPro: modal.js v1.0.0
+ * https://github.com/mazong1123/ratchet-pro
+ * ===================================================================================
+ * Copyright 2015 Jim Ma
+ * Licensed under MIT (https://github.com/mazong1123/ratchet-pro/blob/master/LICENSE)
+ * Originally from https://github.com/twbs/ratchet
+ * =================================================================================== */
+
+(function () {
     'use strict';
 
     var eventModalOpen = new CustomEvent('modalOpen', {
         bubbles: true,
         cancelable: true
     });
+
     var eventModalClose = new CustomEvent('modalClose', {
         bubbles: true,
         cancelable: true
     });
-    var findModals = function (target) {
-        var i;
-        var modals = document.querySelectorAll('a');
 
-        for (; target && target !== document; target = target.parentNode) {
-            for (i = modals.length; i--;) {
-                if (modals[i] === target) {
-                    return target;
+    window.RATCHET.Class.Modal = window.RATCHET.Class.Component.extend({
+        init: function (componentToggle, component) {
+            var self = this;
+
+            self._super(componentToggle, component);
+        },
+
+        onComponentToggleTouchEnd: function (event) {
+            var self = this;
+            self._super(event);
+
+            if (self.component && self.component.classList.contains('modal')) {
+                var eventToDispatch = eventModalOpen;
+                if (self.component.classList.contains('active')) {
+                    eventToDispatch = eventModalClose;
                 }
+                self.component.dispatchEvent(eventToDispatch);
+                self.component.classList.toggle('active');
+
+                event.preventDefault(); // prevents rewriting url (apps can still use hash values in url)
             }
-        }
-    };
-
-    var getModal = function (event) {
-        var modalToggle = findModals(event.target);
-        if (modalToggle && modalToggle.hash) {
-            return document.querySelector(modalToggle.hash);
-        }
-    };
-
-    window.addEventListener('touchend', function (event) {
-        var modal = getModal(event);
-        if (modal && modal.classList.contains('modal')) {
-            var eventToDispatch = eventModalOpen;
-            if (modal.classList.contains('active')) {
-                eventToDispatch = eventModalClose;
-            }
-            modal.dispatchEvent(eventToDispatch);
-            modal.classList.toggle('active');
-
-            event.preventDefault(); // prevents rewriting url (apps can still use hash values in url)
         }
     });
-}());
+})();
 
 /* ========================================================================
  * Ratchet: popovers.js v2.0.2
@@ -1495,6 +1524,7 @@
  * ===================================================================================
  * Copyright 2015 Jim Ma
  * Licensed under MIT (https://github.com/mazong1123/ratchet-pro/blob/master/LICENSE)
+ * Originally from https://github.com/twbs/ratchet
  * =================================================================================== */
 
 (function () {
@@ -1506,7 +1536,11 @@
 
             self.entryCallback = undefined;
 
+            self.components = [];
+
             self.domContentLoadedCallback = function () {
+                self.populateComponents();
+
                 // Dom is ready, call entryCallback().
                 if (typeof self.entryCallback === 'function') {
                     self.entryCallback();
@@ -1514,6 +1548,8 @@
             };
 
             self.pageContentReadyCallback = function () {
+                self.populateComponents();
+
                 // Page changing end, page content is ready, call entryCallback();
                 if (typeof self.entryCallback === 'function') {
                     self.entryCallback();
@@ -1536,6 +1572,38 @@
                 var pageContentReadyEventName = pageName + settings.pageContentReadyEventSuffix;
                 document.removeEventListener(pageContentReadyEventName, self.pageContentReadyCallback);
                 document.addEventListener(pageContentReadyEventName, self.pageContentReadyCallback);
+            }
+        },
+
+        populateComponents: function () {
+            var self = this;
+
+            // Dispose existing components.
+            for (var i = 0; i < self.components.length; i++) {
+                var c = self.components[i];
+                c.dispose();
+            }
+
+            self.components.length = 0;
+
+            var componentToggles = document.querySelectorAll('a');
+            var length = componentToggles.length;
+            for (var i = 0; i < length; i++) {
+                var toggle = componentToggles[i];
+                if (toggle.hash === undefined || toggle.hash === null || toggle.hash.length <= 0) {
+                    continue;
+                }
+
+                var component = document.querySelector(toggle.hash);
+                if (component === undefined || component === null) {
+                    continue;
+                }
+
+                if (component.classList.contains('modal')) {
+                    // It's a modal.
+                    var newModel = new window.RATCHET.Class.Modal(toggle, component);
+                    self.components.push(newModel);
+                }
             }
         },
 
