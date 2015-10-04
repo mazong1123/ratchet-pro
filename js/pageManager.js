@@ -66,6 +66,7 @@
 
             self.components.length = 0;
 
+            // Find anchor related components. E.G: modal, popover.
             var componentToggles = document.querySelectorAll('a');
             var length = componentToggles.length;
             for (var i = 0; i < length; i++) {
@@ -92,6 +93,15 @@
                 if (newComponent !== null) {
                     self.components.push(newComponent);
                 }
+            }
+
+            var segmentedControls = document.querySelectorAll('.segmented-control');
+            var segmentedControlLength = segmentedControls.length;
+            for (var i = 0; i < segmentedControlLength; i++) {
+                var sc = segmentedControls[i];
+                var newSegmentedControlComponent = new window.RATCHET.Class.SegmentedControl(null, sc);
+
+                self.components.push(newSegmentedControlComponent);
             }
         },
 

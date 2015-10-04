@@ -484,6 +484,12 @@
             self.componentToggle = componentToggle;
             self.component = component;
 
+            self.initEvents();
+        },
+
+        initEvents: function () {
+            var self = this;
+
             self.componentToggleTouchEnd = function (event) {
                 self.onComponentToggleTouchEnd(event);
             };
@@ -548,14 +554,14 @@
     });
 })();
 
-/* ========================================================================
- * Ratchet: popover.js v2.0.2
- * http://goratchet.com/components#popovers
- * ========================================================================
- * Copyright 2015 Connor Sears
- * Licensed under MIT (https://github.com/twbs/ratchet/blob/master/LICENSE)
- * ======================================================================== */
-
+/* ===================================================================================
+ * RatchetPro: popover.js v1.0.0
+ * https://github.com/mazong1123/ratchet-pro
+ * ===================================================================================
+ * Copyright 2015 Jim Ma
+ * Licensed under MIT (https://github.com/mazong1123/ratchet-pro/blob/master/LICENSE)
+ * Originally from https://github.com/twbs/ratchet
+ * =================================================================================== */
 !(function () {
     'use strict';
 
@@ -620,81 +626,6 @@
 
         instance.backDropElement = backDropElement;
     };
-
-    /*var popover;
-
-    var findPopovers = function (target) {
-        var i;
-        var popovers = document.querySelectorAll('a');
-
-        for (; target && target !== document; target = target.parentNode) {
-            for (i = popovers.length; i--;) {
-                if (popovers[i] === target) {
-                    return target;
-                }
-            }
-        }
-    };
-
-    var onPopoverHidden = function () {
-        popover.style.display = 'none';
-        popover.removeEventListener(window.RATCHET.getTransitionEnd, onPopoverHidden);
-    };
-
-    var backdrop = (function () {
-        var element = document.createElement('div');
-
-        element.classList.add('backdrop');
-
-        element.addEventListener('touchend', function () {
-            popover.addEventListener(window.RATCHET.getTransitionEnd, onPopoverHidden);
-            popover.classList.remove('visible');
-            popover.parentNode.removeChild(backdrop);
-        });
-
-        return element;
-    }());
-
-    var getPopover = function (e) {
-        var anchor = findPopovers(e.target);
-
-        if (!anchor || !anchor.hash || (anchor.hash.indexOf('/') > 0)) {
-            return;
-        }
-
-        try {
-            popover = document.querySelector(anchor.hash);
-        } catch (error) {
-            popover = null;
-        }
-
-        if (popover === null) {
-            return;
-        }
-
-        if (!popover || !popover.classList.contains('popover')) {
-            return;
-        }
-
-        return popover;
-    };
-
-    var showHidePopover = function (e) {
-        var popover = getPopover(e);
-
-        if (!popover) {
-            return;
-        }
-
-        popover.style.display = 'block';
-        popover.offsetHeight;
-        popover.classList.add('visible');
-
-        popover.parentNode.appendChild(backdrop);
-    };
-
-    window.addEventListener('touchend', showHidePopover);*/
-
 }());
 
 /* ===================================================================================
@@ -1243,76 +1174,102 @@
     window.addEventListener('popstate', popstate);
 })();
 
-/* ========================================================================
- * Ratchet: segmented-controllers.js v2.0.2
- * http://goratchet.com/components#segmentedControls
- * ========================================================================
- * Copyright 2015 Connor Sears
- * Licensed under MIT (https://github.com/twbs/ratchet/blob/master/LICENSE)
- * ======================================================================== */
+/* ===================================================================================
+ * RatchetPro: segmented-control.js v1.0.0
+ * https://github.com/mazong1123/ratchet-pro
+ * ===================================================================================
+ * Copyright 2015 Jim Ma
+ * Licensed under MIT (https://github.com/mazong1123/ratchet-pro/blob/master/LICENSE)
+ * Originally from https://github.com/twbs/ratchet
+ * =================================================================================== */
 
-!(function () {
+(function () {
     'use strict';
 
-    var getTarget = function (target) {
-        var i;
-        var segmentedControls = document.querySelectorAll('.segmented-control .control-item');
+    window.RATCHET.Class.SegmentedControl = window.RATCHET.Class.Component.extend({
+        init: function (componentToggle, component) {
+            var self = this;
 
-        for (; target && target !== document; target = target.parentNode) {
-            for (i = segmentedControls.length; i--;) {
-                if (segmentedControls[i] === target) {
-                    return target;
+            self.componentToggle = componentToggle;
+            self.component = component;
+
+            // Find all control items.
+            self.controlItems = self.component.querySelectorAll('.control-item');
+
+            self.initEvents();
+        },
+
+        initEvents: function(){
+            var self = this;
+
+            self.componentToggleTouchEnd = function (event) {
+                self.onComponentToggleTouchEnd(event);
+            };
+
+            var controlItemLength = self.controlItems.length;
+
+            for (var i = 0; i < controlItemLength; i++) {
+                var ci = self.controlItems[i];
+
+                ci.addEventListener('touchend', self.componentToggleTouchEnd);
+            }
+        },
+
+        dispose: function () {
+            var self = this;
+            var controlItemLength = self.controlItems.length;
+
+            for (var i = 0; i < controlItemLength; i++) {
+                var ci = self.controlItems[i];
+
+                ci.removeEventListener('touchend', self.componentToggleTouchEnd);
+            }
+        },
+
+        onComponentToggleTouchEnd: function (event) {
+            var self = this;
+            self._super(event);
+
+            var targetTab = event.target;
+
+            if (targetTab && targetTab.classList.contains('control-item')) {
+                var activeTab;
+                var activeBodies;
+                var targetBody;
+                var className = 'active';
+                var classSelector = '.' + className;
+
+                activeTab = targetTab.parentNode.querySelector(classSelector);
+
+                if (activeTab) {
+                    activeTab.classList.remove(className);
                 }
+
+                targetTab.classList.add(className);
+
+                if (!targetTab.hash) {
+                    return;
+                }
+
+                targetBody = document.querySelector(targetTab.hash);
+
+                if (!targetBody) {
+                    return;
+                }
+
+                activeBodies = targetBody.parentNode.querySelectorAll(classSelector);
+
+                for (var i = 0; i < activeBodies.length; i++) {
+                    activeBodies[i].classList.remove(className);
+                }
+
+                targetBody.classList.add(className);
+
+                event.preventDefault(); // prevents rewriting url (apps can still use hash values in url)
             }
         }
-    };
-
-    window.addEventListener('touchend', function (e) {
-        var activeTab;
-        var activeBodies;
-        var targetBody;
-        var targetTab = getTarget(e.target);
-        var className = 'active';
-        var classSelector = '.' + className;
-
-        if (!targetTab) {
-            return;
-        }
-
-        activeTab = targetTab.parentNode.querySelector(classSelector);
-
-        if (activeTab) {
-            activeTab.classList.remove(className);
-        }
-
-        targetTab.classList.add(className);
-
-        if (!targetTab.hash) {
-            return;
-        }
-
-        targetBody = document.querySelector(targetTab.hash);
-
-        if (!targetBody) {
-            return;
-        }
-
-        activeBodies = targetBody.parentNode.querySelectorAll(classSelector);
-
-        for (var i = 0; i < activeBodies.length; i++) {
-            activeBodies[i].classList.remove(className);
-        }
-
-        targetBody.classList.add(className);
     });
-
-    window.addEventListener('click', function (e) {
-        if (getTarget(e.target)) {
-            e.preventDefault();
-        }
-    });
-
-}());
+})();
 
 /* ========================================================================
  * Ratchet: sliders.js v2.0.2
@@ -1652,6 +1609,7 @@
 
             self.components.length = 0;
 
+            // Find anchor related components. E.G: modal, popover.
             var componentToggles = document.querySelectorAll('a');
             var length = componentToggles.length;
             for (var i = 0; i < length; i++) {
@@ -1678,6 +1636,15 @@
                 if (newComponent !== null) {
                     self.components.push(newComponent);
                 }
+            }
+
+            var segmentedControls = document.querySelectorAll('.segmented-control');
+            var segmentedControlLength = segmentedControls.length;
+            for (var i = 0; i < segmentedControlLength; i++) {
+                var sc = segmentedControls[i];
+                var newSegmentedControlComponent = new window.RATCHET.Class.SegmentedControl(null, sc);
+
+                self.components.push(newSegmentedControlComponent);
             }
         },
 

@@ -60,7 +60,7 @@ module.exports = function (grunt) {
                   'js/modal.js',
                   'js/popover.js',
                   'js/pusher.js',
-                  'js/segmented-controllers.js',
+                  'js/segmented-control.js',
                   'js/sliders.js',
                   'js/toggles.js',
                   'js/pageManager.js',

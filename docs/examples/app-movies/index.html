@@ -13,9 +13,13 @@
 <body>
     <header class="bar bar-nav">
         <a class="icon icon-gear pull-right" href="#settingsModal"></a>
-        <h1 class="title">Movie finder</h1>
+        <div class="segmented-control">
+            <a class="control-item active">One</a>
+            <a class="control-item" href="#settingsModal">Settings</a>
+            <a class="control-item">Three</a>
+        </div>
     </header>
-    <div class="content" data-page="index">
+    <div class="content" data-page="index" id="main-content">
         <div>
             <form>
                 <input id="search" type="search" placeholder="Search">

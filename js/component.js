@@ -17,6 +17,12 @@
             self.componentToggle = componentToggle;
             self.component = component;
 
+            self.initEvents();
+        },
+
+        initEvents: function () {
+            var self = this;
+
             self.componentToggleTouchEnd = function (event) {
                 self.onComponentToggleTouchEnd(event);
             };
