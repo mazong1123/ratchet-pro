@@ -548,7 +548,9 @@
                 self.component.dispatchEvent(eventToDispatch);
                 self.component.classList.toggle('active');
 
-                event.preventDefault(); // prevents rewriting url (apps can still use hash values in url)
+                // prevents rewriting url.
+                event.preventDefault();
+                event.stopPropagation();
             }
         }
     });
@@ -594,7 +596,9 @@
 
                 showBackDrop(self);
 
-                event.preventDefault(); // prevents rewriting url (apps can still use hash values in url)
+                // prevents rewriting url.
+                event.preventDefault();
+                event.stopPropagation();
             }
         },
 
@@ -1265,7 +1269,9 @@
 
                 targetBody.classList.add(className);
 
-                event.preventDefault(); // prevents rewriting url (apps can still use hash values in url)
+                // prevents rewriting url.
+                event.preventDefault();
+                event.stopPropagation();
             }
         }
     });

@@ -38,7 +38,9 @@
 
                 showBackDrop(self);
 
-                event.preventDefault(); // prevents rewriting url (apps can still use hash values in url)
+                // prevents rewriting url.
+                event.preventDefault();
+                event.stopPropagation();
             }
         },
 
