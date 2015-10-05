@@ -772,7 +772,10 @@
                 jQuery(options.container).find('*').off();
             }
 
-            renderData(cachedHtml, options);
+            // Deep clone page data to prevent messing up the cached data.
+            var newPageData = deepClonePageData(cachedHtml);
+
+            renderData(newPageData, options);
             cachePush();
 
             return;
@@ -1019,10 +1022,12 @@
             jQuery(options.container).find('*').off();
         }
 
-        renderData(data, options);
+        var pageData = deepClonePageData(data);
 
         // Cache the loaded html data.
-        htmlCache[options.url] = data;
+        htmlCache[options.url] = pageData;
+
+        renderData(data, options);
     };
 
     var failure = function (url) {
@@ -1239,6 +1244,19 @@
         }
 
         return data;
+    };
+
+    var deepClonePageData = function (data) {
+        var newPageData = {};
+        newPageData.barfooter = data.barfooter == null ? null : data.barfooter.cloneNode(true);
+        newPageData.barheadersecondary = data.barheadersecondary == null ? null : data.barheadersecondary.cloneNode(true);
+        newPageData.barnav = data.barnav == null ? null : data.barnav.cloneNode(true);
+        newPageData.bartab = data.bartab == null ? null : data.bartab.cloneNode(true);
+        newPageData.contents = data.contents == null ? null : data.contents.cloneNode(true);
+        newPageData.title = data.title;
+        newPageData.url = data.url;
+
+        return newPageData;
     };
 
     // Attach PUSH event handlers
