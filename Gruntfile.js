@@ -62,7 +62,7 @@ module.exports = function (grunt) {
                   'js/pusher.js',
                   'js/segmented-control.js',
                   'js/sliders.js',
-                  'js/toggles.js',
+                  'js/toggle.js',
                   'js/pageManager.js',
                   'js/startup.js'
                 ],

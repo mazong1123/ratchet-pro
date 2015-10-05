@@ -1504,127 +1504,119 @@
 
 }());
 
-/* ========================================================================
- * Ratchet: toggles.js v2.0.2
- * http://goratchet.com/components#toggles
- * ========================================================================
-   Adapted from Brad Birdsall's swipe
- * Copyright 2015 Connor Sears
- * Licensed under MIT (https://github.com/twbs/ratchet/blob/master/LICENSE)
- * ======================================================================== */
+/* ===================================================================================
+ * RatchetPro: toggle.js v1.0.0
+ * https://github.com/mazong1123/ratchet-pro
+ * ===================================================================================
+ * Copyright 2015 Jim Ma
+ * Licensed under MIT (https://github.com/mazong1123/ratchet-pro/blob/master/LICENSE)
+ * Originally from https://github.com/twbs/ratchet by Connor Sears
+ * =================================================================================== */
 
-!(function () {
+(function () {
     'use strict';
 
-    var start = {};
-    var touchMove = false;
-    var distanceX = false;
-    var toggle = false;
     var transformProperty = window.RATCHET.getBrowserCapabilities.transform;
 
-    var findToggle = function (target) {
-        var i;
-        var toggles = document.querySelectorAll('.toggle');
+    window.RATCHET.Class.Toggle = window.RATCHET.Class.Component.extend({
+        init: function (componentToggle, component) {
+            var self = this;
+            self.start = {};
+            self.touchMove = false;
+            self.distanceX = false;
 
-        for (; target && target !== document; target = target.parentNode) {
-            for (i = toggles.length; i--;) {
-                if (toggles[i] === target) {
-                    return target;
+            self._super(componentToggle, component);
+        },
+
+        initEvents: function () {
+            var self = this;
+
+            self.componentTouchStart = function (e) {
+                e = e.originalEvent || e;
+
+                var toggle = self.component;
+
+                var handle = toggle.querySelector('.toggle-handle');
+                var toggleWidth = toggle.clientWidth;
+                var handleWidth = handle.clientWidth;
+                var offset = toggle.classList.contains('active') ? (toggleWidth - handleWidth) : 0;
+
+                self.start = { pageX: e.touches[0].pageX - offset, pageY: e.touches[0].pageY };
+                self.touchMove = false;
+            };
+
+            self.componentTouchMove = function (e) {
+                e = e.originalEvent || e;
+
+                if (e.touches.length > 1) {
+                    return; // Exit if a pinch
                 }
-            }
+
+                var toggle = self.component;
+
+                var handle = toggle.querySelector('.toggle-handle');
+                var current = e.touches[0];
+                var toggleWidth = toggle.clientWidth;
+                var handleWidth = handle.clientWidth;
+                var offset = toggleWidth - handleWidth;
+
+                self.touchMove = true;
+                self.distanceX = current.pageX - self.start.pageX;
+
+                if (Math.abs(self.distanceX) < Math.abs(current.pageY - self.start.pageY)) {
+                    return;
+                }
+
+                e.preventDefault();
+
+                if (self.distanceX < 0) {
+                    return (handle.style[transformProperty] = 'translate3d(0,0,0)');
+                }
+                if (self.distanceX > offset) {
+                    return (handle.style[transformProperty] = 'translate3d(' + offset + 'px,0,0)');
+                }
+
+                handle.style[transformProperty] = 'translate3d(' + self.distanceX + 'px,0,0)';
+
+                toggle.classList[(self.distanceX > (toggleWidth / 2 - handleWidth / 2)) ? 'add' : 'remove']('active');
+            };
+
+            self.componentTouchEnd = function (e) {
+                var toggle = self.component;
+
+                var handle = toggle.querySelector('.toggle-handle');
+                var toggleWidth = toggle.clientWidth;
+                var handleWidth = handle.clientWidth;
+                var offset = (toggleWidth - handleWidth);
+                var slideOn = (!self.touchMove && !toggle.classList.contains('active')) || (self.touchMove && (self.distanceX > (toggleWidth / 2 - handleWidth / 2)));
+
+                if (slideOn) {
+                    handle.style[transformProperty] = 'translate3d(' + offset + 'px,0,0)';
+                } else {
+                    handle.style[transformProperty] = 'translate3d(0,0,0)';
+                }
+
+                toggle.classList[slideOn ? 'add' : 'remove']('active');
+
+                e = new CustomEvent('toggle', {
+                    detail: {
+                        isActive: slideOn
+                    },
+                    bubbles: true,
+                    cancelable: true
+                });
+
+                toggle.dispatchEvent(e);
+
+                self.touchMove = false;
+            };
+
+            self.component.addEventListener('touchstart', self.componentTouchStart);
+            self.component.addEventListener('touchmove', self.componentTouchMove);
+            self.component.addEventListener('touchend', self.componentTouchEnd);
         }
-    };
-
-    window.addEventListener('touchstart', function (e) {
-        e = e.originalEvent || e;
-
-        toggle = findToggle(e.target);
-
-        if (!toggle) {
-            return;
-        }
-
-        var handle = toggle.querySelector('.toggle-handle');
-        var toggleWidth = toggle.clientWidth;
-        var handleWidth = handle.clientWidth;
-        var offset = toggle.classList.contains('active') ? (toggleWidth - handleWidth) : 0;
-
-        start = { pageX: e.touches[0].pageX - offset, pageY: e.touches[0].pageY };
-        touchMove = false;
     });
-
-    window.addEventListener('touchmove', function (e) {
-        e = e.originalEvent || e;
-
-        if (e.touches.length > 1) {
-            return; // Exit if a pinch
-        }
-
-        if (!toggle) {
-            return;
-        }
-
-        var handle = toggle.querySelector('.toggle-handle');
-        var current = e.touches[0];
-        var toggleWidth = toggle.clientWidth;
-        var handleWidth = handle.clientWidth;
-        var offset = toggleWidth - handleWidth;
-
-        touchMove = true;
-        distanceX = current.pageX - start.pageX;
-
-        if (Math.abs(distanceX) < Math.abs(current.pageY - start.pageY)) {
-            return;
-        }
-
-        e.preventDefault();
-
-        if (distanceX < 0) {
-            return (handle.style[transformProperty] = 'translate3d(0,0,0)');
-        }
-        if (distanceX > offset) {
-            return (handle.style[transformProperty] = 'translate3d(' + offset + 'px,0,0)');
-        }
-
-        handle.style[transformProperty] = 'translate3d(' + distanceX + 'px,0,0)';
-
-        toggle.classList[(distanceX > (toggleWidth / 2 - handleWidth / 2)) ? 'add' : 'remove']('active');
-    });
-
-    window.addEventListener('touchend', function (e) {
-        if (!toggle) {
-            return;
-        }
-
-        var handle = toggle.querySelector('.toggle-handle');
-        var toggleWidth = toggle.clientWidth;
-        var handleWidth = handle.clientWidth;
-        var offset = (toggleWidth - handleWidth);
-        var slideOn = (!touchMove && !toggle.classList.contains('active')) || (touchMove && (distanceX > (toggleWidth / 2 - handleWidth / 2)));
-
-        if (slideOn) {
-            handle.style[transformProperty] = 'translate3d(' + offset + 'px,0,0)';
-        } else {
-            handle.style[transformProperty] = 'translate3d(0,0,0)';
-        }
-
-        toggle.classList[slideOn ? 'add' : 'remove']('active');
-
-        e = new CustomEvent('toggle', {
-            detail: {
-                isActive: slideOn
-            },
-            bubbles: true,
-            cancelable: true
-        });
-
-        toggle.dispatchEvent(e);
-
-        touchMove = false;
-        toggle = false;
-    });
-
-}());
+})();
 
 /* ===================================================================================
  * RatchetPro: pageManager.js v1.0.0
@@ -1723,6 +1715,7 @@
                 }
             }
 
+            // Segemented controls.
             var segmentedControls = document.querySelectorAll('.segmented-control');
             var segmentedControlLength = segmentedControls.length;
             for (var i = 0; i < segmentedControlLength; i++) {
@@ -1730,6 +1723,16 @@
                 var newSegmentedControlComponent = new window.RATCHET.Class.SegmentedControl(null, sc);
 
                 self.components.push(newSegmentedControlComponent);
+            }
+
+            // Toggle controls.
+            var toggleControls = document.querySelectorAll('.toggle');
+            var toggleControlLength = toggleControls.length;
+            for (var i = 0; i < toggleControlLength; i++) {
+                var tc = toggleControls[i];
+                var newToggleControlComponent = new window.RATCHET.Class.Toggle(null, tc);
+
+                self.components.push(newToggleControlComponent);
             }
         },
 

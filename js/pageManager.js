@@ -95,6 +95,7 @@
                 }
             }
 
+            // Segemented controls.
             var segmentedControls = document.querySelectorAll('.segmented-control');
             var segmentedControlLength = segmentedControls.length;
             for (var i = 0; i < segmentedControlLength; i++) {
@@ -102,6 +103,16 @@
                 var newSegmentedControlComponent = new window.RATCHET.Class.SegmentedControl(null, sc);
 
                 self.components.push(newSegmentedControlComponent);
+            }
+
+            // Toggle controls.
+            var toggleControls = document.querySelectorAll('.toggle');
+            var toggleControlLength = toggleControls.length;
+            for (var i = 0; i < toggleControlLength; i++) {
+                var tc = toggleControls[i];
+                var newToggleControlComponent = new window.RATCHET.Class.Toggle(null, tc);
+
+                self.components.push(newToggleControlComponent);
             }
         },
 

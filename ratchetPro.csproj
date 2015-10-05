@@ -199,7 +199,7 @@
     <Content Include="js\segmented-control.js" />
     <Content Include="js\sliders.js" />
     <Content Include="js\startup.js" />
-    <Content Include="js\toggles.js" />
+    <Content Include="js\toggle.js" />
   </ItemGroup>
   <ItemGroup>
     <Content Include=".travis.yml" />
