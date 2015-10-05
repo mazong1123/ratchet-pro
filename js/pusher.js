@@ -35,16 +35,16 @@
     var eventDataList = [];
 
     // Override the addEventListener to store listener references.
-    var _interfaces = [HTMLAnchorElement,
+    var interfaces = [HTMLAnchorElement,
         HTMLDivElement,
         HTMLImageElement,
         HTMLButtonElement,
         HTMLInputElement,
         HTMLFormElement,
         HTMLLabelElement];
-    for (var i = 0; i < _interfaces.length; i++) {
+    for (var i = 0; i < interfaces.length; i++) {
         (function(original) {
-            _interfaces[i].prototype.addEventListener = function(type, listener, useCapture) {
+            interfaces[i].prototype.addEventListener = function(type, listener, useCapture) {
 
                 // Store event data.
                 var newEventData = {
@@ -57,7 +57,7 @@
 
                 return original.apply(this, arguments);
             }
-        })(_interfaces[i].prototype.addEventListener);
+        })(interfaces[i].prototype.addEventListener);
     }
 
     window.RATCHET.Class.Pusher = Class.extend({
