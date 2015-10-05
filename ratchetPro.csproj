@@ -197,7 +197,7 @@
     <Content Include="js\popover.js" />
     <Content Include="js\pusher.js" />
     <Content Include="js\segmented-control.js" />
-    <Content Include="js\sliders.js" />
+    <Content Include="js\slider.js" />
     <Content Include="js\startup.js" />
     <Content Include="js\toggle.js" />
   </ItemGroup>

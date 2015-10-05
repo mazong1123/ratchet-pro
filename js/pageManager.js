@@ -114,6 +114,16 @@
 
                 self.components.push(newToggleControlComponent);
             }
+
+            // Slider controls.
+            var sliderControls = document.querySelectorAll('.slider');
+            var sliderControlLength = sliderControls.length;
+            for (var i = 0; i < sliderControlLength; i++) {
+                var sliderControl = sliderControls[i];
+                var newSliderControlComponent = new window.RATCHET.Class.Slider(null, sliderControl);
+
+                self.components.push(newSliderControlComponent);
+            }
         },
 
         changePage: function (url, transition) {

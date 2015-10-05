@@ -1,12 +1,12 @@
 /*!
- * =====================================================
+ * =============================================================
  * RatchetPro v1.0.0 (https://github.com/mazong1123/ratchet-pro)
  * Copyright 2015 mazong1123
  * Licensed under MIT (https://github.com/mazong1123/ratchet-pro/blob/master/LICENSE)
  *
  * v1.0.0 designed by @mazong1123.
- * forked from https://github.com/twbs/ratchet 
- * =====================================================
+ * forked from https://github.com/twbs/ratchet by Connor Sears
+ * =============================================================
  */
 /* Simple JavaScript Inheritance
  * By John Resig http://ejohn.org/
@@ -445,19 +445,6 @@
         };
 
         xhr.send();
-
-        /*jQuery.ajax(getScriptOptions).done(function (data, textStatus, jqXHR) {
-            // Indicates the js has been loaded and executed.
-            loadedScripts.push(source);
-
-            if (successCallback !== undefined && successCallback !== null && typeof successCallback === 'function') {
-                successCallback(data, textStatus, jqXHR);
-            }
-        }).fail(function (jqXHR, textStatus, errorThrown) {
-            if (failCallback !== undefined && successCallback !== null && typeof failCallback === 'function') {
-                failCallback(jqXHR, textStatus, errorThrown);
-            }
-        });*/
     };
 
     // Original script from http://davidwalsh.name/vendor-prefix
@@ -1357,7 +1344,7 @@
 })();
 
 /* ========================================================================
- * Ratchet: sliders.js v2.0.2
+ * Ratchet: slider.js v2.0.2
  * http://goratchet.com/components#sliders
  * ========================================================================
    Adapted from Brad Birdsall's swipe
@@ -1365,144 +1352,147 @@
  * Licensed under MIT (https://github.com/twbs/ratchet/blob/master/LICENSE)
  * ======================================================================== */
 
-!(function () {
+(function () {
     'use strict';
-
-    var pageX;
-    var pageY;
-    var slider;
-    var deltaX;
-    var deltaY;
-    var offsetX;
-    var lastSlide;
-    var startTime;
-    var resistance;
-    var sliderWidth;
-    var slideNumber;
-    var isScrolling;
-    var scrollableArea;
-    var startedMoving;
 
     var transformPrefix = window.RATCHET.getBrowserCapabilities.prefix;
     var transformProperty = window.RATCHET.getBrowserCapabilities.transform;
 
-    var getSlider = function (target) {
-        var i;
-        var sliders = document.querySelectorAll('.slider > .slide-group');
+    window.RATCHET.Class.Slider = window.RATCHET.Class.Component.extend({
+        init: function (componentToggle, component) {
+            var self = this;
+            self.pageX = undefined;
+            self.pageY = undefined;
+            self.deltaX = undefined;
+            self.deltaY = undefined;
+            self.offsetX = undefined;
+            self.lastSlide = undefined;
+            self.startTime = undefined;
+            self.resistance = undefined;
+            self.sliderWidth = undefined;
+            self.slideNumber = undefined;
+            self.isScrolling = undefined;
+            self.scrollableArea = undefined;
+            self.startedMoving = undefined;
+            self.slider = undefined;
 
-        for (; target && target !== document; target = target.parentNode) {
-            for (i = sliders.length; i--;) {
-                if (sliders[i] === target) {
-                    return target;
+            self.componentToggle = componentToggle;
+            self.component = component;
+
+            self.slider = self.component.querySelector('.slide-group');
+            self.slideItems = self.component.querySelectorAll('.slide');
+            self.slideLength = self.slideItems.length;
+
+            self.initEvents();
+        },
+
+        initEvents: function () {
+            var self = this;
+
+            self.componentTouchStart = function (e) {
+                if (self.slideLength <= 0) {
+                    return;
                 }
-            }
-        }
-    };
 
-    var getScroll = function () {
-        var translate3d = slider.style[transformProperty].match(/translate3d\(([^,]*)/);
+                var firstItem = self.slideItems[0];
+
+                self.scrollableArea = firstItem.offsetWidth * self.slideLength;
+                self.isScrolling = undefined;
+                self.sliderWidth = self.slider.offsetWidth;
+                self.resistance = 1;
+                self.lastSlide = -(self.slideLength - 1);
+                self.startTime = +new Date();
+                self.pageX = e.touches[0].pageX;
+                self.pageY = e.touches[0].pageY;
+                self.deltaX = 0;
+                self.deltaY = 0;
+
+                setSlideNumber(self, 0);
+
+                self.slider.style[transformPrefix + 'transition-duration'] = 0;
+            };
+
+            self.componentTouchMove = function (e) {
+                if (e.touches.length > 1 || !self.slider) {
+                    return; // Exit if a pinch || no slider
+                }
+
+                // adjust the starting position if we just started to avoid jumpage
+                if (!self.startedMoving) {
+                    self.pageX += (e.touches[0].pageX - self.pageX) - 1;
+                }
+
+                self.deltaX = e.touches[0].pageX - self.pageX;
+                self.deltaY = e.touches[0].pageY - self.pageY;
+                self.pageX = e.touches[0].pageX;
+                self.pageY = e.touches[0].pageY;
+
+                if (typeof self.isScrolling === 'undefined' && self.startedMoving) {
+                    self.isScrolling = Math.abs(self.deltaY) > Math.abs(self.deltaX);
+                }
+
+                if (self.isScrolling) {
+                    return;
+                }
+
+                self.offsetX = (self.deltaX / self.resistance) + getScroll(self);
+
+                e.preventDefault();
+
+                self.resistance = self.slideNumber === 0 && self.deltaX > 0 ? (self.pageX / self.sliderWidth) + 1.25 :
+                             self.slideNumber === self.lastSlide && self.deltaX < 0 ? (Math.abs(self.pageX) / self.sliderWidth) + 1.25 : 1;
+
+                self.slider.style[transformProperty] = 'translate3d(' + self.offsetX + 'px,0,0)';
+
+                // started moving
+                self.startedMoving = true;
+            };
+
+            self.componentTouchEnd = function (e) {
+                if (!self.slider || self.isScrolling) {
+                    return;
+                }
+
+                // we're done moving
+                self.startedMoving = false;
+
+                setSlideNumber(self, (+new Date()) - self.startTime < 1000 && Math.abs(self.deltaX) > 15 ? (self.deltaX < 0 ? -1 : 1) : 0);
+
+                self.offsetX = self.slideNumber * self.sliderWidth;
+
+                self.slider.style[transformPrefix + 'transition-duration'] = '.2s';
+                self.slider.style[transformProperty] = 'translate3d(' + self.offsetX + 'px,0,0)';
+
+                e = new CustomEvent('slide', {
+                    detail: { slideNumber: Math.abs(self.slideNumber) },
+                    bubbles: true,
+                    cancelable: true
+                });
+
+                self.component.dispatchEvent(e);
+            };
+
+            self.component.addEventListener('touchstart', self.componentTouchStart);
+            self.component.addEventListener('touchmove', self.componentTouchMove);
+            self.component.addEventListener('touchend', self.componentTouchEnd);
+        }
+    });
+
+    var getScroll = function (instance) {
+        var translate3d = instance.slider.style[transformProperty].match(/translate3d\(([^,]*)/);
         var ret = translate3d ? translate3d[1] : 0;
+
         return parseInt(ret, 10);
     };
 
-    var setSlideNumber = function (offset) {
-        var round = offset ? (deltaX < 0 ? 'ceil' : 'floor') : 'round';
-        slideNumber = Math[round](getScroll() / (scrollableArea / slider.children.length));
-        slideNumber += offset;
-        slideNumber = Math.min(slideNumber, 0);
-        slideNumber = Math.max(-(slider.children.length - 1), slideNumber);
+    var setSlideNumber = function (instance, offset) {
+        var round = offset ? (instance.deltaX < 0 ? 'ceil' : 'floor') : 'round';
+        instance.slideNumber = Math[round](getScroll(instance) / (instance.scrollableArea / instance.slideLength));
+        instance.slideNumber += offset;
+        instance.slideNumber = Math.min(instance.slideNumber, 0);
+        instance.slideNumber = Math.max(-(instance.slideLength - 1), instance.slideNumber);
     };
-
-    var onTouchStart = function (e) {
-        slider = getSlider(e.target);
-
-        if (!slider) {
-            return;
-        }
-
-        var firstItem = slider.querySelector('.slide');
-
-        scrollableArea = firstItem.offsetWidth * slider.children.length;
-        isScrolling = undefined;
-        sliderWidth = slider.offsetWidth;
-        resistance = 1;
-        lastSlide = -(slider.children.length - 1);
-        startTime = +new Date();
-        pageX = e.touches[0].pageX;
-        pageY = e.touches[0].pageY;
-        deltaX = 0;
-        deltaY = 0;
-
-        setSlideNumber(0);
-
-        slider.style[transformPrefix + 'transition-duration'] = 0;
-    };
-
-    var onTouchMove = function (e) {
-        if (e.touches.length > 1 || !slider) {
-            return; // Exit if a pinch || no slider
-        }
-
-        // adjust the starting position if we just started to avoid jumpage
-        if (!startedMoving) {
-            pageX += (e.touches[0].pageX - pageX) - 1;
-        }
-
-        deltaX = e.touches[0].pageX - pageX;
-        deltaY = e.touches[0].pageY - pageY;
-        pageX = e.touches[0].pageX;
-        pageY = e.touches[0].pageY;
-
-        if (typeof isScrolling === 'undefined' && startedMoving) {
-            isScrolling = Math.abs(deltaY) > Math.abs(deltaX);
-        }
-
-        if (isScrolling) {
-            return;
-        }
-
-        offsetX = (deltaX / resistance) + getScroll();
-
-        e.preventDefault();
-
-        resistance = slideNumber === 0 && deltaX > 0 ? (pageX / sliderWidth) + 1.25 :
-                     slideNumber === lastSlide && deltaX < 0 ? (Math.abs(pageX) / sliderWidth) + 1.25 : 1;
-
-        slider.style[transformProperty] = 'translate3d(' + offsetX + 'px,0,0)';
-
-        // started moving
-        startedMoving = true;
-    };
-
-    var onTouchEnd = function (e) {
-        if (!slider || isScrolling) {
-            return;
-        }
-
-        // we're done moving
-        startedMoving = false;
-
-        setSlideNumber((+new Date()) - startTime < 1000 && Math.abs(deltaX) > 15 ? (deltaX < 0 ? -1 : 1) : 0);
-
-        offsetX = slideNumber * sliderWidth;
-
-        slider.style[transformPrefix + 'transition-duration'] = '.2s';
-        slider.style[transformProperty] = 'translate3d(' + offsetX + 'px,0,0)';
-
-        e = new CustomEvent('slide', {
-            detail: { slideNumber: Math.abs(slideNumber) },
-            bubbles: true,
-            cancelable: true
-        });
-
-        slider.parentNode.dispatchEvent(e);
-    };
-
-    window.addEventListener('touchstart', onTouchStart);
-    window.addEventListener('touchmove', onTouchMove);
-    window.addEventListener('touchend', onTouchEnd);
-
-}());
+})();
 
 /* ===================================================================================
  * RatchetPro: toggle.js v1.0.0
@@ -1733,6 +1723,16 @@
                 var newToggleControlComponent = new window.RATCHET.Class.Toggle(null, tc);
 
                 self.components.push(newToggleControlComponent);
+            }
+
+            // Slider controls.
+            var sliderControls = document.querySelectorAll('.slider');
+            var sliderControlLength = sliderControls.length;
+            for (var i = 0; i < sliderControlLength; i++) {
+                var sliderControl = sliderControls[i];
+                var newSliderControlComponent = new window.RATCHET.Class.Slider(null, sliderControl);
+
+                self.components.push(newSliderControlComponent);
             }
         },
 

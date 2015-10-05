@@ -97,19 +97,6 @@
         };
 
         xhr.send();
-
-        /*jQuery.ajax(getScriptOptions).done(function (data, textStatus, jqXHR) {
-            // Indicates the js has been loaded and executed.
-            loadedScripts.push(source);
-
-            if (successCallback !== undefined && successCallback !== null && typeof successCallback === 'function') {
-                successCallback(data, textStatus, jqXHR);
-            }
-        }).fail(function (jqXHR, textStatus, errorThrown) {
-            if (failCallback !== undefined && successCallback !== null && typeof failCallback === 'function') {
-                failCallback(jqXHR, textStatus, errorThrown);
-            }
-        });*/
     };
 
     // Original script from http://davidwalsh.name/vendor-prefix

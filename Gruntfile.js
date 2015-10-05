@@ -33,14 +33,14 @@ module.exports = function (grunt) {
         },
 
         banner: '/*!\n' +
-                ' * =====================================================\n' +
+                ' * =============================================================\n' +
                 ' * RatchetPro v<%= pkg.version %> (<%= pkg.homepage %>)\n' +
                 ' * Copyright <%= grunt.template.today("yyyy") %> <%= pkg.author %>\n' +
                 ' * Licensed under <%= pkg.license %> (https://github.com/mazong1123/ratchet-pro/blob/master/LICENSE)\n' +
                 ' *\n' +
                 ' * v<%= pkg.version %> designed by @mazong1123.\n' +
-                ' * forked from https://github.com/twbs/ratchet \n' +
-                ' * =====================================================\n' +
+                ' * forked from https://github.com/twbs/ratchet by Connor Sears\n' +
+                ' * =============================================================\n' +
                 ' */\n',
 
         clean: {
@@ -61,7 +61,7 @@ module.exports = function (grunt) {
                   'js/popover.js',
                   'js/pusher.js',
                   'js/segmented-control.js',
-                  'js/sliders.js',
+                  'js/slider.js',
                   'js/toggle.js',
                   'js/pageManager.js',
                   'js/startup.js'
