@@ -220,6 +220,23 @@
     <Content Include="js\.jscsrc" />
     <Content Include="js\.jshintrc" />
     <Content Include="LICENSE" />
+    <Content Include="mazong1123.github.io\dist\css\ratchetPro-theme-android.css" />
+    <Content Include="mazong1123.github.io\dist\css\ratchetPro-theme-android.min.css" />
+    <Content Include="mazong1123.github.io\dist\css\ratchetPro-theme-ios.css" />
+    <Content Include="mazong1123.github.io\dist\css\ratchetPro-theme-ios.min.css" />
+    <Content Include="mazong1123.github.io\dist\css\ratchetPro.css" />
+    <Content Include="mazong1123.github.io\dist\css\ratchetPro.min.css" />
+    <Content Include="mazong1123.github.io\dist\fonts\ratchicons.svg" />
+    <Content Include="mazong1123.github.io\dist\js\ratchetPro.js" />
+    <Content Include="mazong1123.github.io\dist\js\ratchetPro.min.js" />
+    <Content Include="mazong1123.github.io\index.html" />
+    <Content Include="mazong1123.github.io\scripts\app-life.js" />
+    <Content Include="mazong1123.github.io\scripts\app-work.js" />
+    <Content Include="mazong1123.github.io\life.html" />
+    <Content Include="mazong1123.github.io\work.html" />
+    <Content Include="mazong1123.github.io\profile.html" />
+    <Content Include="mazong1123.github.io\scripts\app-profile.js" />
+    <Content Include="mazong1123.github.io\scripts\app-index.js" />
     <Content Include="package.json" />
     <Content Include="README.md" />
     <Content Include="sass\.csscomb.json" />
@@ -251,6 +268,11 @@
     <Content Include="tests\lib\qunit.js" />
     <Content Include="tests\pageLoaderTests.html" />
     <Content Include="_config.yml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="mazong1123.github.io\dist\fonts\ratchicons.eot" />
+    <Content Include="mazong1123.github.io\dist\fonts\ratchicons.ttf" />
+    <Content Include="mazong1123.github.io\dist\fonts\ratchicons.woff" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -29,7 +29,8 @@ module.exports = function (grunt) {
             docsDistPath: 'docs/dist/',
             docsPath: 'docs/',
             jsPath: 'js/',
-            srcPath: 'sass/'
+            srcPath: 'sass/',
+            userPageDistPath: 'mazong1123.github.io/dist/'
         },
 
         banner: '/*!\n' +
@@ -44,7 +45,7 @@ module.exports = function (grunt) {
                 ' */\n',
 
         clean: {
-            dist: ['<%= meta.distPath %>', '<%= meta.docsDistPath %>']
+            dist: ['<%= meta.distPath %>', '<%= meta.docsDistPath %>', '<%= meta.userPageDistPath %>']
         },
 
         concat: {
@@ -148,6 +149,14 @@ module.exports = function (grunt) {
                   '**/*'
                 ],
                 dest: '<%= meta.docsDistPath %>'
+            },
+            userPage: {
+                expand: true,
+                cwd: '<%= meta.distPath %>',
+                src: [
+                  '**/*'
+                ],
+                dest: '<%= meta.userPageDistPath %>'
             }
         },
 

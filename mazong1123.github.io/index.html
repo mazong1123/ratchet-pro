@@ -1,0 +1,82 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Jim Ma's Garage</title>
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="stylesheet" href="dist/css/ratchetPro.min.css" />
+    <script src="dist/js/ratchetPro.min.js"></script>
+</head>
+<body>
+    <header class="bar bar-nav">
+        <h1 class="title">
+            Jim Ma's Garage
+        </h1>
+    </header>
+    <div class="content" data-page="index">
+        <div class="content-padded">
+            <p>
+                Hi there, I'm Jim. Welcome to my garage. This site is built on <a href="https://github.com/mazong1123/ratchet-pro" data-ignore="push" target="_blank">RatchetPro</a>, one of my
+                open source projects.
+            </p>
+        </div>
+        <ul class="table-view">
+            <li class="table-view-cell media">
+                <a class="navigate-right" href="profile.html" data-transition="slide-in">
+                    <img class="media-object pull-left" src="http://placehold.it/42x42">
+                    <div class="media-body">
+                        General Profile
+                        <p>
+                            This is a great place to know me.
+                        </p>
+                    </div>
+                </a>
+            </li>
+            <li class="table-view-cell media">
+                <a class="navigate-right" href="work.html" data-transition="slide-in">
+                    <img class="media-object pull-left" src="http://placehold.it/42x42">
+                    <div class="media-body">
+                        Working Experience
+                        <p>
+                            Well, this chapter should be useful if I'm looking for a job. Get in to check my status!
+                        </p>
+                    </div>
+                </a>
+            </li>
+            <li class="table-view-cell media">
+                <a class="navigate-right" href="life.html" data-transition="slide-in">
+                    <img class="media-object pull-left" src="http://placehold.it/42x42">
+                    <div class="media-body">
+                        What else I did...
+                        <p>
+                            Hacking, gaming, traveling, photographing, etc. Life is richer without work!
+                        </p>
+                    </div>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <nav class="bar bar-tab">
+        <a class="tab-item active" href="#">
+            <span class="icon icon-home"></span>
+            <span class="tab-label">Home</span>
+        </a>
+        <a class="tab-item" href="profile.html" data-transition="slide-in">
+            <span class="icon icon-person"></span>
+            <span class="tab-label">Profile</span>
+        </a>
+        <a class="tab-item" href="work.html" data-transition="slide-in">
+            <span class="icon icon-star-filled"></span>
+            <span class="tab-label">Work</span>
+        </a>
+        <a class="tab-item" href="life.html" data-transition="slide-in">
+            <span class="icon icon-search"></span>
+            <span class="tab-label">Life</span>
+        </a>
+    </nav>
+    <script src="scripts/app-index.js"></script>
+</body>
+</html>
