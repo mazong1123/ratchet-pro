@@ -4,8 +4,8 @@
  * ===================================================================================
  * Copyright 2015 Jim Ma
  * Licensed under MIT (https://github.com/mazong1123/ratchet-pro/blob/master/LICENSE)
- * Originally from https://github.com/twbs/ratchet
- * ======================================= ============================================ */
+ * Originally from https://github.com/twbs/ratchet by Connor Sears
+ * ==================================================================================== */
 
 !(function () {
     'use strict';
@@ -29,16 +29,17 @@
         window.RATCHET.Class = {};
     }
 
+    // Shrim Date.now()
+    if (!Date.now) {
+        Date.now = function () {
+            return new Date().getTime();
+        }
+    }
+
     var loadedScripts = [];
 
-    // Using JQuery to load external scripts. Need help to get rid of JQuery.
+    // Load external scripts.
     window.RATCHET.getScript = function (source, successCallback, failCallback) {
-        if (typeof window.jQuery === 'undefined') {
-            console.log('JQuery not found. Cannot load and execute page scripts.');
-
-            return;
-        }
-
         if (loadedScripts.indexOf(source) >= 0) {
             // If the script has already been loaded, don't load it again, just call the success callback.
             if (successCallback !== undefined && successCallback !== null && typeof successCallback === 'function') {
@@ -65,12 +66,39 @@
             }
         }
 
-        var getScriptOptions = {
-            url: source,
-            dataType: 'script'
+        // Add timestamp to prevent ajax cache.
+        var url = source + '?_=' + Date.now();
+
+        var xhr = new XMLHttpRequest();
+        xhr.responseType = 'text';
+        xhr.open('GET', url, true);
+
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4) {
+                if (xhr.status === 200) {
+                    var scriptText = xhr.responseText;
+
+                    // Execute the scripts.
+                    globalEval(scriptText);
+
+                    // Indicates the js has been loaded and executed.
+                    loadedScripts.push(source);
+
+                    if (typeof successCallback === 'function') {
+                        successCallback();
+                    }
+                }
+                else {
+                    if (typeof failCallback === 'function') {
+                        failCallback(xhr, xhr.statusText);
+                    }
+                }
+            }
         };
 
-        jQuery.ajax(getScriptOptions).done(function (data, textStatus, jqXHR) {
+        xhr.send();
+
+        /*jQuery.ajax(getScriptOptions).done(function (data, textStatus, jqXHR) {
             // Indicates the js has been loaded and executed.
             loadedScripts.push(source);
 
@@ -81,7 +109,7 @@
             if (failCallback !== undefined && successCallback !== null && typeof failCallback === 'function') {
                 failCallback(jqXHR, textStatus, errorThrown);
             }
-        });
+        });*/
     };
 
     // Original script from http://davidwalsh.name/vendor-prefix
@@ -115,4 +143,33 @@
 
         return transEndEventNames.transition;
     })();
+
+    // From jQuery 2.1.4
+    var globalEval = function (code) {
+        var script;
+        var indirect = eval;
+
+        code = compatibleTrim(code);
+
+        if (code) {
+            // If the code includes a valid, prologue position
+            // strict mode pragma, execute code by injecting a
+            // script tag into the document.
+            if (code.indexOf("use strict") === 1) {
+                script = document.createElement("script");
+                script.text = code;
+                document.head.appendChild(script).parentNode.removeChild(script);
+            } else {
+                // Otherwise, avoid the DOM node creation, insertion
+                // and removal by using an indirect global eval
+                indirect(code);
+            }
+        }
+    };
+
+    // From jQuery 2.1.4 (original name: trim). Support Android < 4.1
+    var compatibleTrim = function (text) {
+        var rtrim = /^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g;
+        return text == null ? "" : (text + "").replace(rtrim, "");
+    };
 }());

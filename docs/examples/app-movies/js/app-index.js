@@ -8,9 +8,15 @@
     rachetPageManager.ready(function () {
         console.log('entry point of index page.');
 
-        $('#changePage').on('click', function (e) {
+        document.querySelector('#changePage').addEventListener('click', function (e) {
             e.preventDefault();
             rachetPageManager.changePage('choose-theater.html', 'slide-in');
         });
+
+        // jQuery is supported by RatchetPro as well.
+        /*$('#changePage').on('click', function (e) {
+            e.preventDefault();
+            rachetPageManager.changePage('choose-theater.html', 'slide-in');
+        });*/
     });
 })();

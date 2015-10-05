@@ -4,7 +4,7 @@
  * ===================================================================================
  * Copyright 2015 Jim Ma
  * Licensed under MIT (https://github.com/mazong1123/ratchet-pro/blob/master/LICENSE)
- * Originally from https://github.com/twbs/ratchet
+ * Originally from https://github.com/twbs/ratchet by Connor Sears
  * =================================================================================== */
 !(function () {
     'use strict';
@@ -41,16 +41,6 @@
                 // prevents rewriting url.
                 event.preventDefault();
                 event.stopPropagation();
-            }
-        },
-
-        dispose: function () {
-            var self = this;
-            self._super();
-
-            // Remove back drop element event listener.
-            if (self.backDropElement !== undefined) {
-                self.backDropElement.removeEventListener('touchend', self.onBackDropElementTouchEnd);
             }
         }
     });

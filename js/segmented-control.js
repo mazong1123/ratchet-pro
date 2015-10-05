@@ -4,7 +4,7 @@
  * ===================================================================================
  * Copyright 2015 Jim Ma
  * Licensed under MIT (https://github.com/mazong1123/ratchet-pro/blob/master/LICENSE)
- * Originally from https://github.com/twbs/ratchet
+ * Originally from https://github.com/twbs/ratchet by Connor Sears
  * =================================================================================== */
 
 (function () {
@@ -36,17 +36,6 @@
                 var ci = self.controlItems[i];
 
                 ci.addEventListener('touchend', self.componentToggleTouchEnd);
-            }
-        },
-
-        dispose: function () {
-            var self = this;
-            var controlItemLength = self.controlItems.length;
-
-            for (var i = 0; i < controlItemLength; i++) {
-                var ci = self.controlItems[i];
-
-                ci.removeEventListener('touchend', self.componentToggleTouchEnd);
             }
         },
 

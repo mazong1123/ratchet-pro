@@ -4,7 +4,7 @@
  * ===================================================================================
  * Copyright 2015 Jim Ma
  * Licensed under MIT (https://github.com/mazong1123/ratchet-pro/blob/master/LICENSE)
- * Originally from https://github.com/twbs/ratchet
+ * Originally from https://github.com/twbs/ratchet by Connor Sears
  * =================================================================================== */
 
 (function () {
@@ -31,8 +31,7 @@
         },
 
         dispose: function () {
-            var self = this;
-            self.componentToggle.removeEventListener('touchend', self.componentToggleTouchEnd);
+            // To be overrided by the inherited class.
         },
 
         onComponentToggleTouchEnd: function (event) {

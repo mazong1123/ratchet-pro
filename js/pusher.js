@@ -4,7 +4,7 @@
  * ===================================================================================
  * Copyright 2015 Jim Ma
  * Licensed under MIT (https://github.com/mazong1123/ratchet-pro/blob/master/LICENSE)
- * Originally from https://github.com/twbs/ratchet
+ * Originally from https://github.com/twbs/ratchet by Connor Sears
  * =================================================================================== */
 
 /* global _gaq: true */
@@ -31,6 +31,34 @@
         barfooter: '.bar-footer',
         barheadersecondary: '.bar-header-secondary'
     };
+
+    var eventDataList = [];
+
+    // Override the addEventListener to store listener references.
+    var _interfaces = [HTMLAnchorElement,
+        HTMLDivElement,
+        HTMLImageElement,
+        HTMLButtonElement,
+        HTMLInputElement,
+        HTMLFormElement,
+        HTMLLabelElement];
+    for (var i = 0; i < _interfaces.length; i++) {
+        (function(original) {
+            _interfaces[i].prototype.addEventListener = function(type, listener, useCapture) {
+
+                // Store event data.
+                var newEventData = {
+                    element: this,
+                    type: type,
+                    listener: listener
+                };
+
+                eventDataList.push(newEventData);
+
+                return original.apply(this, arguments);
+            }
+        })(_interfaces[i].prototype.addEventListener);
+    }
 
     window.RATCHET.Class.Pusher = Class.extend({
         init: function () {
@@ -69,6 +97,9 @@
         // Load from cache at first.
         var cachedHtml = htmlCache[options.url];
         if (cachedHtml !== undefined) {
+            // Remove all event listeners to prevent duplicate event listeners issue.
+            clearEventListeners();
+
             if (typeof window.jQuery !== 'undefined') {
                 // If jQuery used, remove all jQuery event listeners of current page to prevent duplicate event listeners issue.
                 jQuery(options.container).find('*').off();
@@ -118,6 +149,16 @@
         if (xhr.readyState && !options.ignorePush) {
             cachePush();
         }
+    };
+
+    var clearEventListeners = function () {
+        var eventDataListLength = eventDataList.length;
+        for (var i = 0; i < eventDataListLength; i++) {
+            var ed = eventDataList[i];
+            ed.element.removeEventListener(ed.type, ed.listener);
+        }
+
+        eventDataList.length = 0;
     };
 
     // Pushstate caching
@@ -302,6 +343,9 @@
 
     var success = function (xhr, options) {
         var data = parseXHR(xhr, options);
+
+        // Remove all event listeners to prevent duplicate event listeners issue.
+        clearEventListeners();
 
         if (typeof window.jQuery !== 'undefined') {
             // If jQuery used, remove all jQuery event listeners of current page to prevent duplicate event listeners issue.
