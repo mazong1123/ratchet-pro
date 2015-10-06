@@ -70,7 +70,6 @@
         var url = source + '?_=' + Date.now();
 
         var xhr = new XMLHttpRequest();
-        xhr.responseType = 'text';
         xhr.open('GET', url, true);
 
         xhr.onreadystatechange = function () {
