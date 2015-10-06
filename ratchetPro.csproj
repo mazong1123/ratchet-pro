@@ -204,7 +204,6 @@
   <ItemGroup>
     <Content Include=".travis.yml" />
     <Content Include="bower.json" />
-    <Content Include="CNAME" />
     <Content Include="CONTRIBUTING.md" />
     <Content Include="dist\fonts\ratchicons.eot" />
     <Content Include="dist\fonts\ratchicons.ttf" />

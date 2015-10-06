@@ -72,6 +72,11 @@
     window.RATCHET.Class.Pusher.push = function (options) {
         var key;
 
+        // To unify the behavior of transition, set 'none' as the default transition effect.
+        if (options.transition === undefined || options.transition === null) {
+            options.transition = 'none';
+        }
+
         options.container = options.container || options.transition ? document.querySelector(window.RATCHET.Class.Pusher.settings.pageContentElementSelector) : document.body;
 
         var isFileProtocol = /^file:/.test(window.location.protocol);
@@ -436,8 +441,7 @@
                 container.classList.add('fade');
                 swap.classList.add('fade');
             }
-
-            if (/slide/.test(transition)) {
+            else if (/slide/.test(transition)) {
                 swap.classList.add('sliding-in', enter ? 'right' : 'left');
                 swap.classList.add('sliding');
                 container.classList.add('sliding');
@@ -470,10 +474,8 @@
                 }
             };
             container.addEventListener(window.RATCHET.getTransitionEnd, fadeContainerEnd);
-
         }
-
-        if (/slide/.test(transition)) {
+        else if (/slide/.test(transition)) {
             var slideEnd = function () {
                 swap.removeEventListener(window.RATCHET.getTransitionEnd, slideEnd);
                 swap.classList.remove('sliding', 'sliding-in');
@@ -490,6 +492,12 @@
             container.classList.add(containerDirection);
             swap.classList.remove(swapDirection);
             swap.addEventListener(window.RATCHET.getTransitionEnd, slideEnd);
+        }
+        else if (transition === 'none') {
+            container.parentNode.removeChild(container);
+            if (complete) {
+                complete();
+            }
         }
     };
 
@@ -570,11 +578,13 @@
         var text = 'innerText' in data.title ? 'innerText' : 'textContent';
         data.title = data.title && data.title[text].trim();
 
-        if (options.transition) {
+        data = extendWithDom(data, window.RATCHET.Class.Pusher.settings.pageContentElementSelector, body);
+
+        /*if (options.transition) {
             data = extendWithDom(data, window.RATCHET.Class.Pusher.settings.pageContentElementSelector, body);
         } else {
             data.contents = body;
-        }
+        }*/
 
         return data;
     };
