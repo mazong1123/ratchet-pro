@@ -709,8 +709,8 @@
         HTMLFormElement,
         HTMLLabelElement];
     for (var i = 0; i < interfaces.length; i++) {
-        (function(original) {
-            interfaces[i].prototype.addEventListener = function(type, listener, useCapture) {
+        (function (original) {
+            interfaces[i].prototype.addEventListener = function (type, listener, useCapture) {
 
                 // Store event data.
                 var newEventData = {
@@ -732,7 +732,8 @@
     });
 
     window.RATCHET.Class.Pusher.settings = {
-        pageContentElementSelector: '.content'
+        pageContentElementSelector: '.content',
+        omitBars: false // Whether update bars (usually header/footer) during page switching.
     };
 
     window.RATCHET.Class.Pusher.push = function (options) {
@@ -747,9 +748,11 @@
 
         var isFileProtocol = /^file:/.test(window.location.protocol);
 
-        for (key in bars) {
-            if (bars.hasOwnProperty(key)) {
-                options[key] = options[key] || document.querySelector(bars[key]);
+        if (!window.RATCHET.Class.Pusher.settings.omitBars) {
+            for (key in bars) {
+                if (bars.hasOwnProperty(key)) {
+                    options[key] = options[key] || document.querySelector(bars[key]);
+                }
             }
         }
 
@@ -980,13 +983,16 @@
 
         if (transitionFromObj.transition) {
             activeObj = extendWithDom(activeObj, window.RATCHET.Class.Pusher.settings.pageContentElementSelector, activeDom.cloneNode(true));
-            for (key in bars) {
-                if (bars.hasOwnProperty(key)) {
-                    barElement = document.querySelector(bars[key]);
-                    if (activeObj[key]) {
-                        swapContent(activeObj[key], barElement);
-                    } else if (barElement) {
-                        barElement.parentNode.removeChild(barElement);
+
+            if (!window.RATCHET.Class.Pusher.settings.omitBars) {
+                for (key in bars) {
+                    if (bars.hasOwnProperty(key)) {
+                        barElement = document.querySelector(bars[key]);
+                        if (activeObj[key]) {
+                            swapContent(activeObj[key], barElement);
+                        } else if (barElement) {
+                            barElement.parentNode.removeChild(barElement);
+                        }
                     }
                 }
             }
@@ -1054,13 +1060,15 @@
         }
 
         if (options.transition) {
-            for (key in bars) {
-                if (bars.hasOwnProperty(key)) {
-                    barElement = document.querySelector(bars[key]);
-                    if (data[key]) {
-                        swapContent(data[key], barElement);
-                    } else if (barElement) {
-                        barElement.parentNode.removeChild(barElement);
+            if (!window.RATCHET.Class.Pusher.settings.omitBars) {
+                for (key in bars) {
+                    if (bars.hasOwnProperty(key)) {
+                        barElement = document.querySelector(bars[key]);
+                        if (data[key]) {
+                            swapContent(data[key], barElement);
+                        } else if (barElement) {
+                            barElement.parentNode.removeChild(barElement);
+                        }
                     }
                 }
             }
@@ -1205,13 +1213,15 @@
             }
         }
 
-        Object.keys(bars).forEach(function (key) {
-            var el = dom.querySelector(bars[key]);
-            if (el) {
-                el.parentNode.removeChild(el);
-            }
-            result[key] = el;
-        });
+        if (!window.RATCHET.Class.Pusher.settings.omitBars) {
+            Object.keys(bars).forEach(function (key) {
+                var el = dom.querySelector(bars[key]);
+                if (el) {
+                    el.parentNode.removeChild(el);
+                }
+                result[key] = el;
+            });
+        }
 
         result.contents = dom.querySelector(fragment);
 
@@ -1245,12 +1255,6 @@
         data.title = data.title && data.title[text].trim();
 
         data = extendWithDom(data, window.RATCHET.Class.Pusher.settings.pageContentElementSelector, body);
-
-        /*if (options.transition) {
-            data = extendWithDom(data, window.RATCHET.Class.Pusher.settings.pageContentElementSelector, body);
-        } else {
-            data.contents = body;
-        }*/
 
         return data;
     };
