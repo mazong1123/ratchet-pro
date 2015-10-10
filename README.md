@@ -51,9 +51,12 @@ RatchetPro didn't change any CSS part of RatchetJs as so far. Please check css c
 ####Not working in desktop browser?
 By far, RatchetPro only supports touch events. If you are using Chrome, just press F12 and open the mobile emulator, that will enable touch events.
 
-####Live Examples:
-http://mazong1123.github.io
+####ReactJS integration example:
+http://www.github.com/mazong1123/chitu
 
+####Live Examples:
+Basic usage: http://mazong1123.github.io
+ReactJS integrated: http://mazong1123.github.io/chitu
 ## License
 
 RatchetPro is licensed under the [MIT License](http://opensource.org/licenses/MIT).
