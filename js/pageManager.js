@@ -10,7 +10,14 @@
 (function () {
     'use strict';
 
+    /** 
+    * @description Page management system. 
+    * Encapsulated PUSH system to support multi-page transition as well as page components management.
+    */
     window.RATCHET.Class.PageManager = Class.extend({
+        /** 
+        * @description Initializes a new instance of the window.RATCHET.Class.PageManager class
+        */
         init: function () {
             var self = this;
 
@@ -37,6 +44,10 @@
             };
         },
 
+        /** 
+        * @description Entry point for each page. The given callback function will be called after page ready.
+        * @param {function} callback The callback function after page is ready.
+        */
         ready: function (callback) {
             var self = this;
             self.entryCallback = callback;
@@ -55,6 +66,9 @@
             }
         },
 
+        /** 
+        * @description Create components based on current dom. Existing components will be disposed and removed.
+        */
         populateComponents: function () {
             var self = this;
 
