@@ -149,7 +149,6 @@
             this.element.addEventListener('mousedown', (this.touchStart = this.touchStart.bind(this)), true);
             this.element.addEventListener('mousemove', (this.touchMove = this.touchMove.bind(this)), true);
             this.element.addEventListener('mouseup', (this.touchEnd = this.touchEnd.bind(this)), true);
-            this.element.addEventListener('click', (this.click = this.click.bind(this)), true);
             this.active = true;
         },
 
@@ -161,15 +160,6 @@
             this.element.removeEventListener('mousedown', this.touchStart, true);
             this.element.removeEventListener('mousemove', this.touchMove, true);
             this.element.removeEventListener('mouseup', this.touchEnd, true);
-            this.element.removeEventListener('click', this.click, true);
-        },
-
-        click: function (e) {
-            /*if (e.synthetic) {
-                return;
-            }
-            e.preventDefault();
-            e.stopPropagation();*/
         },
 
         touchStart: function (e) {
@@ -901,7 +891,7 @@
             e.which > 1 ||
             e.metaKey ||
             e.ctrlKey ||
-            isScrolling ||
+            isScrolling && !e._finger ||
             location.protocol !== target.protocol ||
             location.host !== target.host ||
             !target.hash && /#/.test(target.href) ||
@@ -1651,7 +1641,16 @@
 (function () {
     'use strict';
 
+    var fingerBlastInstance = null;
+
+    /** 
+    * @description Page management system. 
+    * Encapsulated PUSH system to support multi-page transition as well as page components management.
+    */
     window.RATCHET.Class.PageManager = Class.extend({
+        /** 
+        * @description Initializes a new instance of the window.RATCHET.Class.PageManager class
+        */
         init: function () {
             var self = this;
 
@@ -1678,6 +1677,10 @@
             };
         },
 
+        /** 
+        * @description Entry point for each page. The given callback function will be called after page ready.
+        * @param {function} callback The callback function after page is ready.
+        */
         ready: function (callback) {
             var self = this;
             self.entryCallback = callback;
@@ -1696,6 +1699,9 @@
             }
         },
 
+        /** 
+        * @description Create components based on current dom. Existing components will be disposed and removed.
+        */
         populateComponents: function () {
             var self = this;
 
@@ -1789,8 +1795,8 @@
     };
 
     window.RATCHET.Class.PageManager.enableMouseSupport = function () {
-        if (typeof window.FingerBlast !== 'undefined') {
-            new window.FingerBlast('body');
+        if (typeof window.FingerBlast !== 'undefined' && fingerBlastInstance === null) {
+            fingerBlastInstance = new window.FingerBlast('body');
         }
     };
 

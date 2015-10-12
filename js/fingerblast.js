@@ -75,7 +75,6 @@
             this.element.addEventListener('mousedown', (this.touchStart = this.touchStart.bind(this)), true);
             this.element.addEventListener('mousemove', (this.touchMove = this.touchMove.bind(this)), true);
             this.element.addEventListener('mouseup', (this.touchEnd = this.touchEnd.bind(this)), true);
-            this.element.addEventListener('click', (this.click = this.click.bind(this)), true);
             this.active = true;
         },
 
@@ -87,15 +86,6 @@
             this.element.removeEventListener('mousedown', this.touchStart, true);
             this.element.removeEventListener('mousemove', this.touchMove, true);
             this.element.removeEventListener('mouseup', this.touchEnd, true);
-            this.element.removeEventListener('click', this.click, true);
-        },
-
-        click: function (e) {
-            /*if (e.synthetic) {
-                return;
-            }
-            e.preventDefault();
-            e.stopPropagation();*/
         },
 
         touchStart: function (e) {

@@ -235,7 +235,7 @@
             e.which > 1 ||
             e.metaKey ||
             e.ctrlKey ||
-            isScrolling ||
+            isScrolling && !e._finger ||
             location.protocol !== target.protocol ||
             location.host !== target.host ||
             !target.hash && /#/.test(target.href) ||

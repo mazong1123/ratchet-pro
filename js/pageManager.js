@@ -10,6 +10,8 @@
 (function () {
     'use strict';
 
+    var fingerBlastInstance = null;
+
     /** 
     * @description Page management system. 
     * Encapsulated PUSH system to support multi-page transition as well as page components management.
@@ -162,8 +164,8 @@
     };
 
     window.RATCHET.Class.PageManager.enableMouseSupport = function () {
-        if (typeof window.FingerBlast !== 'undefined') {
-            new window.FingerBlast('body');
+        if (typeof window.FingerBlast !== 'undefined' && fingerBlastInstance === null) {
+            fingerBlastInstance = new window.FingerBlast('body');
         }
     };
 
