@@ -60,6 +60,9 @@ http://www.github.com/mazong1123/chitu
 Basic usage: http://mazong1123.github.io
 
 ReactJS integrated: http://mazong1123.github.io/chitu
+## Credits
+[Ratchet.js](https://github.com/twbs/ratchet) - Thanks Connor Sears (@connors) bring us this great project. RatchetPro.js forked from this project.
+
 ## License
 
 RatchetPro is licensed under the [MIT License](http://opensource.org/licenses/MIT).
