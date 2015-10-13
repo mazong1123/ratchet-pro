@@ -142,6 +142,11 @@
             }
         },
 
+        /** 
+        * @description Switch to a specific page.
+        * @param {string} url The url of the target page.
+        * @param {string} transition The transition effect. Support: slide-in, slide-out, fade.
+        */
         changePage: function (url, transition) {
             var options = {
                 url: url
