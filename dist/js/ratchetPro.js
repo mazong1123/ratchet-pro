@@ -1685,8 +1685,14 @@
             var self = this;
             self.entryCallback = callback;
 
-            document.removeEventListener('DOMContentLoaded', self.domContentLoadedCallback);
-            document.addEventListener('DOMContentLoaded', self.domContentLoadedCallback);
+            // To adapt the async script situation. Inspired by JQuery.ready()
+            if (document.readyState === 'complete') {
+                setTimeout(self.domContentLoadedCallback);
+            }
+            else {
+                document.removeEventListener('DOMContentLoaded', self.domContentLoadedCallback);
+                document.addEventListener('DOMContentLoaded', self.domContentLoadedCallback);
+            }
 
             var settings = window.RATCHET.Class.PageManager.settings;
 
@@ -1773,6 +1779,11 @@
             }
         },
 
+        /** 
+        * @description Switch to a specific page.
+        * @param {string} url The url of the target page.
+        * @param {string} transition The transition effect. Support: slide-in, slide-out, fade.
+        */
         changePage: function (url, transition) {
             var options = {
                 url: url

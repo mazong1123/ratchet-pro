@@ -54,8 +54,14 @@
             var self = this;
             self.entryCallback = callback;
 
-            document.removeEventListener('DOMContentLoaded', self.domContentLoadedCallback);
-            document.addEventListener('DOMContentLoaded', self.domContentLoadedCallback);
+            // To adapt the async script situation. Inspired by JQuery.ready()
+            if (document.readyState === 'complete') {
+                setTimeout(self.domContentLoadedCallback);
+            }
+            else {
+                document.removeEventListener('DOMContentLoaded', self.domContentLoadedCallback);
+                document.addEventListener('DOMContentLoaded', self.domContentLoadedCallback);
+            }
 
             var settings = window.RATCHET.Class.PageManager.settings;
 
