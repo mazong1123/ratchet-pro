@@ -63,6 +63,9 @@ ReactJS integrated: http://mazong1123.github.io/chitu
 ## Credits
 [Ratchet.js](https://github.com/twbs/ratchet) - Thanks Connor Sears (@connors) bring us this great project. RatchetPro.js forked from this project.
 
+## Test Support
+[BrowserStack](http://www.browserstack.com/) - A great online testing service just makes your life much more easier.
+
 ## License
 
 RatchetPro is licensed under the [MIT License](http://opensource.org/licenses/MIT).
