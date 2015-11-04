@@ -51,7 +51,7 @@ RatchetPro didn't change any CSS part of RatchetJs as so far. Please check css c
 ####Not working in desktop browser?
 RatchetPro only supports touch events by default. For debug purpose, If you are using Chrome, just press F12 and open the mobile emulator, that will enable touch events.
 
-If you really really want mouse events support publicly, call below code
+Call below code to enable mouse support:
 ```javascript
 window.RATCHET.Class.PageManager.enableMouseSupport();
 //rachetPageManager.ready(function() {/*...*/}).
