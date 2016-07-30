@@ -1,7 +1,7 @@
 /*!
  * =============================================================
  * RatchetPro v1.0.0 (https://github.com/mazong1123/ratchet-pro)
- * Copyright 2015 mazong1123
+ * Copyright 2016 mazong1123
  * Licensed under MIT (https://github.com/mazong1123/ratchet-pro/blob/master/LICENSE)
  *
  * v1.0.0 designed by @mazong1123.
@@ -1654,26 +1654,30 @@
         init: function () {
             var self = this;
 
+            self.isRatchetPageChangingReady = false;
+
             self.entryCallback = undefined;
 
             self.components = [];
 
             self.domContentLoadedCallback = function () {
-                self.populateComponents();
+                if (self.isRatchetPageChangingReady) {
+                    // Ratchet page changing system is ready. All page changing will go
+                    // through pageContentReadyCallback routing.
+                    // We do not need to listen to the DOMContentLoaded event now.
+                    document.removeEventListener('DOMContentLoaded', self.domContentLoadedCallback);
 
-                // Dom is ready, call entryCallback().
-                if (typeof self.entryCallback === 'function') {
-                    self.entryCallback();
+                    return;
                 }
+
+                self.processAfterPageInitialized();
             };
 
             self.pageContentReadyCallback = function () {
-                self.populateComponents();
+                self.processAfterPageInitialized();
 
-                // Page changing end, page content is ready, call entryCallback();
-                if (typeof self.entryCallback === 'function') {
-                    self.entryCallback();
-                }
+                // Enter into this method means the Ratchet page changing system is ready.
+                self.isRatchetPageChangingReady = true;
             };
         },
 
@@ -1794,6 +1798,17 @@
             }
 
             window.RATCHET.Class.Pusher.push(options);
+        },
+
+        processAfterPageInitialized: function () {
+            var self = this;
+
+            self.populateComponents();
+
+            // Dom is ready, call entryCallback().
+            if (typeof self.entryCallback === 'function') {
+                self.entryCallback();
+            }
         }
     });
 
