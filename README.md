@@ -1,6 +1,6 @@
 # RatchetPro
 
-A lightweight mobile framework. Re-wrote from ratchetjs (https://github.com/twbs/ratchet). 
+A lightweight mobile framework. Re-wrote from ratchetjs (https://github.com/twbs/ratchet).
 RatchetPro helps you to seperate app logic to multiple pages with single simple entry point (just like what you did in native android/iOS app development) to avoid BIG html/js files.
 
 ###How to use
@@ -21,13 +21,13 @@ RatchetPro will load page script according to page name set in data-page attribu
     <script src="scripts/app-index.js"></script>
 </body>
 ```
-Note "content" class is required to indicate this div a "page". We have a "index" value in data-page attribute, and we refer scripts/app-index.js as our page script. Page script file name must be consist of {pageEntryScriptPath}/{pageEntryScriptPrefix}/{pageName}.js. {pageEntryScriptPath} and {pageEntryScriptPrefix} can be changed:
+Note "content" class is required to indicate this div a "page". We have a "index" value in data-page attribute, and we refer scripts/app-index.js as our page script. Page script file name must be consist of {pageEntryScriptPath}/{pageEntryScriptPrefix}{pageName}.js. {pageEntryScriptPath} and {pageEntryScriptPrefix} can be changed:
 ```javascript
 // Default value: 'scripts'
 window.RATCHET.Class.PageManager.settings.pageEntryScriptPath = 'scripts'
 
 // Default value: 'app-'
-window.RATCHET.Class.PageManager.settings.pageEntryScriptPrefix = 'app-' 
+window.RATCHET.Class.PageManager.settings.pageEntryScriptPrefix = 'app-'
 ```
 
 Next, in the scripts/app-index.js , we have following standard setup script:
@@ -35,7 +35,7 @@ Next, in the scripts/app-index.js , we have following standard setup script:
 (function () {
     // Change the settings here if you want.
     //window.RATCHET.Class.PageManager.settings.pageEntryScriptPath = 'scripts'
-    //window.RATCHET.Class.PageManager.settings.pageEntryScriptPrefix = 'app-' 
+    //window.RATCHET.Class.PageManager.settings.pageEntryScriptPrefix = 'app-'
 
     var rachetPageManager = new window.RATCHET.Class.PageManager();
     rachetPageManager.ready(function () {
