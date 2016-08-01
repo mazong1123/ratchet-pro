@@ -123,31 +123,29 @@
         }
 
         var xhr = new XMLHttpRequest();
-        if (isFileProtocol) {
-            xhr.open('GET', options.url, false);
-        } else {
-            xhr.open('GET', options.url, true);
-            xhr.setRequestHeader('X-PUSH', 'true');
+        xhr.open('GET', options.url, true);
+        xhr.setRequestHeader('X-PUSH', 'true');
 
-            xhr.onreadystatechange = function () {
-                if (options._timeout) {
-                    clearTimeout(options._timeout);
+        xhr.onreadystatechange = function () {
+            if (options._timeout) {
+                clearTimeout(options._timeout);
+            }
+            if (xhr.readyState === 4) {
+                if (xhr.status === 200) {
+                    success(xhr, options);
+                } else {
+                    failure(options.url);
                 }
-                if (xhr.readyState === 4) {
-                    if (xhr.status === 200) {
-                        success(xhr, options);
-                    } else {
-                        failure(options.url);
-                    }
-                }
-            };
-        }
+            }
+        };
 
         if (options.timeout) {
             options._timeout = setTimeout(function () { xhr.abort('timeout'); }, options.timeout);
         }
 
-        xhr.send();
+        if (!isFileProtocol) {
+            xhr.send();
+        }
 
         if (isFileProtocol) {
             if (xhr.status === 0 || xhr.status === 200) {
