@@ -1,14 +1,18 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <title></title>
+    <title>Basic Example Page 2</title>
 	<meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <link rel="stylesheet" href="../../dist/css/ratchetPro.css" />
 </head>
 <body>
     <div class="content" data-page="second">
         <p>I'm the second page.</p>
-        <button id="back-to-first">Back to first page</button>
+        <button class="btn btn-block btn-positive" id="back-to-first">Back to first page</button>
+        <a class="btn btn-block" href="third.html" data-transition="slide-in">To the third page</a>
     </div>
     <script src="scripts/jquery-2.2.3.min.js"></script>
     <script src="../../dist/js/ratchetPro.js"></script>
