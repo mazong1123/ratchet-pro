@@ -1,5 +1,7 @@
 # RatchetPro
 
+[![Build Status](https://travis-ci.org/mazong1123/ratchet-pro.svg?branch=master)](https://travis-ci.org/mazong1123/ratchet-pro)
+
 A lightweight mobile framework. Re-wrote from ratchetjs (https://github.com/twbs/ratchet).
 RatchetPro helps you to seperate app logic to multiple pages with single simple entry point (just like what you did in native android/iOS app development) to avoid BIG html/js files.
 
